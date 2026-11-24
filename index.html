@@ -16,7 +16,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Montserrat:wght@500&family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 /* VOICE: calm, cosy, personal — a reading app you open on a winter evening.
-   IDEA: translucent black-wood wall niches with a warm LED strip, like the log niche in the stone-walled lounge photo.
+   IDEA: floating black-wood top and bottom boards with a warm LED strip, like the log niche in the stone-walled lounge photo.
    PICTURE: full-bleed drawn landscape behind face-out covers (Reading) and spines (Want to read / Read).
    COLOUR and TYPE: dark grey #3a3a3f accent, frosted white glass, sky blue to peach; Cinzel everywhere below the title (Noto Serif TC for Chinese).
    LAYOUT: big title + round icon buttons, search, pill-labelled shelves, floating glass tab bar. */
@@ -51,6 +51,8 @@ h1{margin:22px 0 22px;color:#fff;text-shadow:0 2px 10px #0006;display:flex;flex-
 #splash .t2{animation:spIn2 1.4s cubic-bezier(.2,.7,.2,1) .55s both}
 #splash .t1{font-size:clamp(44px,12vw,104px)}#splash .t2{font-size:clamp(14px,3vw,24px);margin-top:16px}
 #splash.out{opacity:0;visibility:hidden}
+.flapwrap{position:fixed;inset:0;z-index:51;pointer-events:none;filter:drop-shadow(-10px 6px 14px #0006)}
+.flap{position:absolute;inset:0}
 @keyframes spIn{from{opacity:0;transform:translateY(70px) scale(.96);letter-spacing:.16em;filter:blur(6px)}to{opacity:1;transform:none;letter-spacing:.04em;filter:none}}
 @keyframes spIn2{from{opacity:0;transform:translateY(40px);letter-spacing:.8em}to{opacity:1;transform:none;letter-spacing:.42em}}
 @media(prefers-reduced-motion:reduce){#splash .t1,#splash .t2{animation:none}#splash{transition:none}}
@@ -62,17 +64,16 @@ h1 .t2{font:500 clamp(12px,2.4vw,17px)/1 Montserrat,Inter,sans-serif;letter-spac
 .pillh{display:flex;justify-content:space-between;align-items:center;margin:30px 0 10px}
 .pill{background:var(--glass2);backdrop-filter:blur(12px);border-radius:999px;padding:6px 14px;font-weight:700;font-size:17px;box-shadow:0 2px 10px #0001;border:0}
 .cnt{background:var(--glass);border-radius:999px;padding:3px 12px;font-size:14px;font-weight:600;color:var(--mute)}
-.niche{--grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2000' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.004 0.2' numOctaves='3' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.03  0 0 0 0 0.025  0 0 0 0 0.02  0 0 0 1.9 -0.62'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23g%29'/%3E%3C/svg%3E");position:relative;margin-top:22px;border:8px solid transparent;border-radius:3px;
- background:linear-gradient(180deg,#0806052e,#05040326 60%,#0504032e) padding-box,var(--grain) 0 0/2000px 160px padding-box,
-  linear-gradient(#0a0807a6,#060504a6) border-box,var(--grain) 0 0/2000px 160px border-box;
- backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
- box-shadow:inset 0 14px 24px #0007,inset 0 -3px 0 #050403b3,0 1px 0 #ffffff26,0 22px 40px -12px #0009;overflow:hidden}
+.niche{--grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2000' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.004 0.2' numOctaves='3' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.03  0 0 0 0 0.025  0 0 0 0 0.02  0 0 0 1.9 -0.62'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23g%29'/%3E%3C/svg%3E");position:relative;margin-top:22px;padding-top:14px;
+ background:linear-gradient(#0000,#0000) 0 14px/100% 100% no-repeat,var(--grain) 0 -6px/2000px 26px repeat-x,linear-gradient(#0c0a09,#050404) 0 0/100% 14px no-repeat;background-repeat:no-repeat,no-repeat,no-repeat;background-size:100% 100%,2000px 14px,100% 14px;background-position:0 14px,0 0,0 0;
+ filter:drop-shadow(0 10px 14px #0006)}
+.niche .nlab{background:var(--grain) 0 -40px/2000px 160px,linear-gradient(#0e0b0a,#060505);box-shadow:inset 0 1px 0 #ffffff1f}
 #shelves>.niche:first-child{margin-top:26px}
-.niche::before{content:"";position:absolute;left:4%;right:4%;top:0;height:2px;border-radius:2px;background:linear-gradient(90deg,#ffcf8f00,#ffd59a 12%,#ffe0b0 50%,#ffd59a 88%,#ffcf8f00);box-shadow:0 0 10px 2px #ffbf7a99,0 0 26px 6px #ffb36b4d;z-index:2;pointer-events:none}
-.niche::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 70% at 50% 0%,#ffc58a3d,#ffc58a14 45%,#0000 70%);z-index:2;pointer-events:none}
-.nlab{position:relative;z-index:3;display:flex;justify-content:space-between;align-items:baseline;padding:12px 16px 0;color:#e7d6b8;font:600 12px/1 Cinzel,"Noto Serif TC",Georgia,serif;letter-spacing:.22em;text-transform:uppercase}
+.niche::before{content:"";position:absolute;left:4%;right:4%;top:14px;height:2px;border-radius:2px;background:linear-gradient(90deg,#ffcf8f00,#ffd59a 12%,#ffe0b0 50%,#ffd59a 88%,#ffcf8f00);box-shadow:0 0 10px 2px #ffbf7a99,0 0 26px 6px #ffb36b4d;z-index:2;pointer-events:none}
+.niche::after{content:"";position:absolute;left:0;right:0;top:14px;bottom:30px;background:radial-gradient(110% 80% at 50% 0%,#ffc58a59,#ffc58a1f 45%,#0000 75%);z-index:2;pointer-events:none}
+.nlab{position:relative;z-index:3;display:flex;justify-content:space-between;align-items:center;height:30px;padding:0 16px;color:#e7d6b8;font:600 12px/1 Cinzel,"Noto Serif TC",Georgia,serif;letter-spacing:.22em;text-transform:uppercase}
 .nlab b{font-weight:600;letter-spacing:.08em;opacity:.7}
-.row{position:relative;z-index:1;display:flex;align-items:flex-end;gap:3px;padding:14px 16px 0;overflow-x:auto;scroll-snap-type:x proximity;min-height:150px;border-bottom:5px solid #0d0a08cc}
+.row{position:relative;z-index:1;display:flex;align-items:flex-end;gap:3px;padding:14px 16px 0;overflow-x:auto;scroll-snap-type:x proximity;min-height:150px}
 .row.cov{gap:16px}
 
 .cover{flex:none;scroll-snap-align:start;width:118px;height:176px;border:0;border-radius:3px 6px 6px 3px;padding:12px 10px;display:flex;flex-direction:column;justify-content:space-between;text-align:center;color:#fff;
@@ -102,7 +103,7 @@ h1 .t2{font:500 clamp(12px,2.4vw,17px)/1 Montserrat,Inter,sans-serif;letter-spac
  box-shadow:inset 3px 0 0 #ffffff26,inset -3px 0 0 #0002,0 6px 10px #0003;transition:transform .2s}
 .spine span{writing-mode:vertical-rl;font:700 12px/1 Cinzel,"Noto Serif TC",Georgia,serif;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-height:100%}
 .spine small{writing-mode:vertical-rl;font:600 9px/1 Cinzel,"Noto Serif TC",Georgia,serif;letter-spacing:.08em;text-transform:uppercase;opacity:.75;white-space:nowrap;margin-top:auto}
-.empty{font-size:14px;color:#d8c8ac;opacity:.8;padding:10px 0;align-self:center;margin-bottom:34px;font-style:italic;letter-spacing:.04em}
+.empty{font-size:14px;color:#fff;text-shadow:0 1px 6px #000c;opacity:.95;padding:10px 0;align-self:center;margin-bottom:34px;font-style:italic;letter-spacing:.04em}
 .card{background:var(--glass2);backdrop-filter:blur(16px);border-radius:20px;padding:20px;box-shadow:0 8px 30px #0002}
 .goal{display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-top:22px}
 .ring{width:84px;height:84px;flex:none}
@@ -398,7 +399,7 @@ function render(){
   $('#shelves').innerHTML=['reading','want','done'].map(s=>{
     const bs=list.filter(b=>b.status===s);
     const asCover=meta.layout==='covers'||(meta.layout==='mixed'&&s==='reading');
-    return `<section class="niche" aria-label="${ST[s]}"><div class="nlab"><span>${ST[s]}</span><b>${bs.length}</b></div><div class="row${asCover?' cov':''}">${bs.length?bs.map(asCover?b=>cover(b):spine).join(''):`<span class="empty">${q?'No matches':s==='reading'?'Tap Add book to add what you’re reading':'Nothing on this shelf yet'}</span>`}</div></section>`;
+    return `<section class="niche" aria-label="${ST[s]}"><div class="row${asCover?' cov':''}">${bs.length?bs.map(asCover?b=>cover(b):spine).join(''):`<span class="empty">${q?'No matches':s==='reading'?'Tap Add book to add what you’re reading':'Nothing on this shelf yet'}</span>`}</div><div class="nlab"><span>${ST[s]}</span><b>${bs.length}</b></div></section>`;
   }).join('');
   const p=pace(),y=new Date().getFullYear(),r=Math.min(1,p.done/Math.max(1,meta.goal)),C=2*Math.PI*36;
   $('#goalCard').innerHTML=`<svg class="ring" viewBox="0 0 84 84"><circle cx="42" cy="42" r="36" fill="none" stroke="var(--line)" stroke-width="8"/><circle cx="42" cy="42" r="36" fill="none" stroke="var(--wine)" stroke-width="8" stroke-linecap="round" stroke-dasharray="${C*r} ${C}" transform="rotate(-90 42 42)"/><text x="42" y="48" text-anchor="middle" font-size="20" font-weight="700" font-family='Cinzel,Georgia,serif' fill="currentColor">${p.done}</text></svg>
@@ -642,7 +643,30 @@ function sample(){
     if(p)logProgress(b,p);setStatus(b,s);if(s==='done')b.rating=[4.5,4,5][i%3];books[b.id]=b;persist()});
   render();toast('Added 11 sample books — delete them any time');
 }
-{const sp=$('#splash'),hide=()=>{sp.classList.add('out');setTimeout(()=>sp.remove(),800)};const t=setTimeout(hide,3000);sp.addEventListener('click',()=>{clearTimeout(t);hide()})}
+{/* splash: page turn from the bottom-right corner */
+const sp=$('#splash');let done=false;
+const pageTurn=()=>{
+  if(done)return;done=true;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){sp.classList.add('out');setTimeout(()=>sp.remove(),800);return}
+  const W=innerWidth,H=innerHeight,C={x:W,y:H},L=Math.hypot(W,H)*2.4,a=Math.atan2(.42,1),dir={x:-Math.cos(a),y:-Math.sin(a)};
+  const wrap=document.createElement('div');wrap.className='flapwrap';const flap=document.createElement('div');flap.className='flap';wrap.appendChild(flap);document.body.appendChild(wrap);
+  const rect=[{x:0,y:0},{x:W,y:0},{x:W,y:H},{x:0,y:H}];
+  const clip=(poly,f)=>{const out=[];for(let i=0;i<poly.length;i++){const P=poly[i],Q=poly[(i+1)%poly.length],fp=f(P),fq=f(Q);
+    if(fp>=0)out.push(P);if((fp>=0)!==(fq>=0)){const t=fp/(fp-fq);out.push({x:P.x+(Q.x-P.x)*t,y:P.y+(Q.y-P.y)*t})}}return out};
+  const css=pts=>pts.length>2?`polygon(${pts.map(p=>p.x.toFixed(1)+'px '+p.y.toFixed(1)+'px').join(',')})`:'polygon(0 0,0 0,0 0)';
+  const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2,T=1500,t0=performance.now();
+  const step=now=>{
+    const k=Math.min(1,(now-t0)/T),e=ease(k),D={x:C.x+dir.x*L*e,y:C.y+dir.y*L*e},n={x:D.x-C.x,y:D.y-C.y},M={x:(C.x+D.x)/2,y:(C.y+D.y)/2},nn=n.x*n.x+n.y*n.y||1;
+    const f=p=>(p.x-M.x)*n.x+(p.y-M.y)*n.y;
+    const keep=clip(rect,f),lift=clip(rect,p=>-f(p)),refl=lift.map(p=>{const s=2*f(p)/nn;return {x:p.x-s*n.x,y:p.y-s*n.y}});
+    sp.style.clipPath=css(keep);flap.style.clipPath=css(refl);
+    const ang=Math.atan2(n.y,n.x)*180/Math.PI+90,len=Math.sqrt(nn)/2;
+    flap.style.background=`linear-gradient(${ang}deg,#c9bfb1 0px,#efe8dc ${Math.min(60,len*.25)}px,#f7f2ea ${Math.min(160,len*.6)}px,#e6ddcf ${len}px)`;
+    if(k<1)requestAnimationFrame(step);else{sp.remove();wrap.remove()}
+  };
+  requestAnimationFrame(step);
+};
+const t=setTimeout(pageTurn,3000);sp.addEventListener('click',()=>{clearTimeout(t);pageTurn()})}
 connect();
 {const s=document.createElement('script');s.type='module';s.src='sync.js';document.body.appendChild(s)}
 if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
