@@ -12,10 +12,10 @@
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Barlow+Condensed:wght@500;600&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Pinyon+Script&family=Barlow+Condensed:wght@500;600&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
 <style>
 /* VOICE: calm, cosy, personal — a reading app you open on a winter evening.
-   IDEA: glass bookshelves floating over a snowy mountain window at sunset.
+   IDEA: glass bookshelves floating over an evening street photo at sunset.
    PICTURE: full-bleed drawn landscape behind face-out covers (Reading) and spines (Want to read / Read).
    COLOUR and TYPE: wine #7a1f33 accent, frosted white glass, sky blue to peach; Inter UI, Barlow Condensed spines, Playfair covers.
    LAYOUT: big title + round icon buttons, search, pill-labelled shelves, floating glass tab bar. */
@@ -32,17 +32,16 @@ body{color:var(--ink);font:16px/1.5 Inter,system-ui,sans-serif;overflow-x:clip;m
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:3px solid var(--brass);outline-offset:2px}
-#scene{position:fixed;inset:0;width:100%;height:100%;z-index:-1}
-.snow i{position:fixed;top:-10px;width:6px;height:6px;border-radius:50%;background:#fff;opacity:.8;animation:fall linear infinite;z-index:0;pointer-events:none}
-@keyframes fall{to{transform:translate(30px,105vh)}}
-@media(prefers-reduced-motion:reduce){.snow{display:none}}
+#scene{position:fixed;inset:0;z-index:-1;background:#6d8aa6 url(bg-small.jpg) center 35%/cover no-repeat}
+#scene::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0000 0%,#0000 55%,#0003 100%)}
+:root[data-theme=dark] #scene::after{background:#0006}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) #scene::after{background:#0006}}
+@media(min-width:701px){#scene{background-image:url(bg.jpg)}}
 .app{max-width:1080px;margin:0 auto;padding:18px max(4vw,16px) 120px;position:relative;z-index:1}
 .top{display:flex;justify-content:flex-end;gap:10px}
 .rb{width:48px;height:48px;border-radius:50%;border:0;background:var(--glass2);color:var(--wine);display:grid;place-items:center;box-shadow:0 4px 16px #0002;backdrop-filter:blur(12px)}
 .rb svg{width:22px;height:22px}
-h1{font:800 clamp(32px,6vw,46px)/1.05 Inter,sans-serif;margin:14px 0 14px;letter-spacing:-.02em;color:#141414;text-shadow:0 1px 18px #fff8}
-:root[data-theme=dark] h1{color:#fff;text-shadow:0 2px 18px #0008}
-@media(prefers-color-scheme:dark){:root:not([data-theme=light]) h1{color:#fff;text-shadow:0 2px 18px #0008}}
+h1{font:400 clamp(46px,10vw,76px)/1.05 "Pinyon Script",cursive;margin:6px 0 16px;color:#fff;text-shadow:0 2px 6px #0005,0 0 30px #ff9a5a66;font-weight:400}
 .search{display:flex;align-items:center;gap:10px;background:var(--glass);backdrop-filter:blur(14px);border-radius:14px;padding:0 14px;max-width:520px}
 .search svg{width:20px;height:20px;flex:none;opacity:.7}
 .search input{border:0;background:none;padding:12px 0;width:100%;font-size:17px;outline:0}
@@ -159,29 +158,7 @@ textarea{resize:vertical;min-height:80px}
 </style>
 </head>
 <body>
-<svg id="scene" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-  <defs>
-    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--sky1)"/><stop offset=".45" stop-color="var(--sky2)"/><stop offset=".62" stop-color="var(--sky3)"/><stop offset="1" stop-color="var(--sky2)"/></linearGradient>
-    <radialGradient id="sun" cx=".72" cy=".56" r=".35"><stop offset="0" stop-color="var(--sun)" stop-opacity=".95"/><stop offset=".25" stop-color="var(--sun)" stop-opacity=".45"/><stop offset="1" stop-color="var(--sun)" stop-opacity="0"/></radialGradient>
-    <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--snow)" stop-opacity="0"/><stop offset="1" stop-color="var(--snow)" stop-opacity=".9"/></linearGradient>
-    <g id="pine"><path d="M0 0 L-14 30 L-7 30 L-20 58 L-9 58 L-26 90 L26 90 L9 58 L20 58 L7 30 L14 30Z" fill="var(--tree)"/><path d="M0 0 L-8 18 L8 18Z M-14 40 L0 34 L12 42 Z M-20 70 L0 62 L18 72Z" fill="var(--snow)" opacity=".85"/></g>
-  </defs>
-  <rect width="1200" height="900" fill="url(#sky)"/>
-  <rect width="1200" height="900" fill="url(#sun)"/>
-  <circle cx="864" cy="500" r="26" fill="var(--sun)"/>
-  <path d="M0 560 L120 470 L210 520 L330 400 L430 480 L520 430 L640 520 L760 380 L880 470 L980 420 L1090 500 L1200 450 L1200 900 L0 900Z" fill="var(--m1)"/>
-  <path d="M330 400 L300 430 L320 428 L340 445 L360 425 L380 440 L430 480 L330 400Z M760 380 L725 420 L748 415 L770 432 L790 412 L812 430 L880 470Z M120 470 L95 492 L130 488 L150 500Z M980 420 L955 445 L990 438 L1010 450Z" fill="var(--snow)"/>
-  <path d="M0 640 L150 560 L260 610 L400 540 L540 620 L700 560 L860 640 L1000 580 L1200 650 L1200 900 L0 900Z" fill="var(--m2)"/>
-  <path d="M400 540 L372 566 L400 560 L420 576 L440 562 L540 620Z M700 560 L676 584 L702 578 L724 592Z M150 560 L128 580 L158 574Z" fill="var(--snow)" opacity=".9"/>
-  <rect y="620" width="1200" height="280" fill="url(#fade)"/>
-  <g>
-    <use href="#pine" transform="translate(40 640) scale(1.6)"/><use href="#pine" transform="translate(110 690) scale(1.2)"/>
-    <use href="#pine" transform="translate(1110 620) scale(1.8)"/><use href="#pine" transform="translate(1040 690) scale(1.3)"/>
-    <use href="#pine" transform="translate(180 740) scale(.9)"/><use href="#pine" transform="translate(980 750) scale(.9)"/>
-  </g>
-  <rect y="800" width="1200" height="100" fill="var(--snow)"/>
-</svg>
-<div class="snow" id="snow"></div>
+<div id="scene" aria-hidden="true"></div>
 
 <div class="app">
   <div class="top">
@@ -583,8 +560,6 @@ function sample(){
     if(p)logProgress(b,p);setStatus(b,s);if(s==='done')b.rating=[4.5,4,5][i%3];books[b.id]=b;persist()});
   render();toast('Added 11 sample books — delete them any time');
 }
-/* falling snow */
-$('#snow').innerHTML=Array.from({length:40},(_,i)=>`<i style="left:${(i*37)%100}%;animation-duration:${8+(i*7)%10}s;animation-delay:-${(i*13)%18}s;width:${3+i%4}px;height:${3+i%4}px"></i>`).join('');
 connect();
 if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
 }
