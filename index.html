@@ -195,6 +195,11 @@ textarea{resize:vertical;min-height:80px}
       <form id="gf" class="acts" style="margin-top:6px"><label style="margin:0;flex:1">Books to read this year<input type="number" min="1" max="999" id="goalIn"></label><button class="btn pri" style="align-self:flex-end">Save</button></form>
     </div>
     <div class="card" style="margin-top:12px">
+      <h3>Book search</h3>
+      <p class="note">Search uses Google Books (best for Chinese books) and Open Library. If Google Books often says it's busy, paste a free Google Books API key here.</p>
+      <form id="kf" class="acts" style="margin-top:6px"><label style="margin:0;flex:1">Google Books API key (optional)<input id="gkeyIn" autocomplete="off" spellcheck="false" placeholder="AIza…"></label><button class="btn pri" style="align-self:flex-end">Save</button></form>
+    </div>
+    <div class="card" style="margin-top:12px">
       <h3>Covers</h3><p class="note">Look up covers online for every book that doesn't have one yet.</p>
       <div class="acts"><button class="btn" id="fillCovers">Find missing covers</button></div>
     </div>
@@ -260,21 +265,37 @@ async function connect(){
 const httpsOnly=u=>typeof u==='string'&&/^https:\/\//.test(u)?u:'';
 const cleanIsbn=s=>String(s||'').replace(/[^0-9Xx]/g,'').toUpperCase();
 const isIsbn=s=>/^(97[89]\d{10}|\d{9}[\dX])$/.test(cleanIsbn(s));
-async function searchBooks(q){
-  const isb=isIsbn(q)?cleanIsbn(q):'';
-  const g=fetch('https://www.googleapis.com/books/v1/volumes?maxResults=15&q='+encodeURIComponent(isb?'isbn:'+isb:q)).then(r=>r.json()).then(j=>(j.items||[]).map(v=>{const i=v.volumeInfo||{},ids=i.industryIdentifiers||[];
+const hasCJK=s=>/[㐀-鿿豈-﫿]/.test(s);
+const norm=s=>String(s||'').toLowerCase().replace(/[\s\p{P}\p{S}]/gu,'');
+let t2cn=null,lastSearchNote='';
+function loadT2cn(){if(t2cn)return Promise.resolve(t2cn);return new Promise(res=>{const s=document.createElement('script');s.src='opencc-t2cn.js';
+  s.onload=()=>{try{t2cn=OpenCC.Converter({from:'tw',to:'cn'})}catch(e){t2cn=x=>x}res(t2cn)};s.onerror=()=>{t2cn=x=>x;res(t2cn)};document.head.appendChild(s)})}
+function gbooks(q,extra=''){
+  const key=meta.gkey&&/^[\w-]{20,60}$/.test(meta.gkey)?'&key='+meta.gkey:'';
+  return fetch('https://www.googleapis.com/books/v1/volumes?maxResults=20&printType=books&country=TW&q='+encodeURIComponent(q)+extra+key).then(r=>{if(!r.ok)throw new Error('g'+r.status);return r.json()}).then(j=>(j.items||[]).map(v=>{const i=v.volumeInfo||{},ids=i.industryIdentifiers||[];
     const t=(i.imageLinks&&(i.imageLinks.thumbnail||i.imageLinks.smallThumbnail))||'';
-    return {title:i.title+(i.subtitle&&i.title.length<30?': '+i.subtitle:''),author:(i.authors||[]).join(', '),pages:i.pageCount||0,year:(i.publishedDate||'').slice(0,4),
+    return {title:(i.title||'')+(i.subtitle&&(i.title||'').length<30?(hasCJK(i.title)?'：':': ')+i.subtitle:''),author:(i.authors||[]).join(', '),pages:i.pageCount||0,year:(i.publishedDate||'').slice(0,4),lang:i.language||'',publisher:i.publisher||'',
       isbn:(ids.find(x=>x.type==='ISBN_13')||ids.find(x=>x.type==='ISBN_10')||{}).identifier||'',cover:httpsOnly(t.replace(/^http:/,'https:').replace('&edge=curl',''))}}));
+}
+async function searchBooks(q){
+  const isb=isIsbn(q)?cleanIsbn(q):'',cjk=!isb&&hasCJK(q);
+  let simp=q;if(cjk){try{simp=(await loadT2cn())(q)}catch(e){}}
+  const G=isb?[gbooks('isbn:'+isb)]:cjk?[gbooks(q,'&langRestrict=zh'),gbooks('intitle:'+q),...(simp!==q?[gbooks(simp)]:[]),gbooks(q)]:[gbooks(q)];
   const o=fetch('https://openlibrary.org/search.json?limit=15&fields=title,author_name,number_of_pages_median,cover_i,isbn,first_publish_year&'+(isb?'isbn='+isb:'q='+encodeURIComponent(q))).then(r=>r.json()).then(j=>(j.docs||[]).map(d=>({
-    title:d.title,author:(d.author_name||[]).slice(0,2).join(', '),pages:d.number_of_pages_median||0,year:String(d.first_publish_year||''),isbn:isb||(d.isbn||[]).find(x=>x.length===13)||'',
+    title:d.title,author:(d.author_name||[]).slice(0,2).join(', '),pages:d.number_of_pages_median||0,year:String(d.first_publish_year||''),isbn:isb||(d.isbn||[]).find(x=>x.length===13)||'',lang:'',
     cover:d.cover_i?`https://covers.openlibrary.org/b/id/${d.cover_i}-L.jpg`:''})));
-  const [a,b]=await Promise.allSettled([g,o]);const A=a.status==='fulfilled'?a.value:[],B=b.status==='fulfilled'?b.value:[];
-  if(a.status==='rejected'&&b.status==='rejected')throw new Error('offline');
+  const res=await Promise.allSettled([...G,o]);
+  const gRes=res.slice(0,G.length),ok=res.filter(r=>r.status==='fulfilled');
+  if(!ok.length)throw new Error('offline');
+  lastSearchNote=gRes.every(r=>r.status==='rejected')?'Google Books is busy right now, so results may be incomplete — try again in a minute.':'';
+  const lists=res.map(r=>r.status==='fulfilled'?r.value:[]);
   const out=[],seen=new Map();
-  for(let i=0;i<Math.max(A.length,B.length);i++)for(const r of [A[i],B[i]]){if(!r||!r.title)continue;const k=(r.title+'|'+r.author).toLowerCase().replace(/\s+/g,' ');
-    if(seen.has(k)){const p=seen.get(k);if(!p.cover&&r.cover)p.cover=r.cover;if(!p.pages&&r.pages)p.pages=r.pages;if(!p.isbn&&r.isbn)p.isbn=r.isbn;continue}seen.set(k,r);out.push(r)}
+  for(let i=0;i<20;i++)for(const L of lists){const r=L[i];if(!r||!r.title)continue;const k=norm(r.title)+'|'+norm(r.author);
+    if(seen.has(k)){const p=seen.get(k);for(const f of ['cover','pages','isbn','lang','publisher'])if(!p[f]&&r[f])p[f]=r[f];continue}seen.set(k,r);out.push(r)}
   if(isb&&!out.some(r=>r.cover))out.forEach(r=>r.cover=r.cover||`https://covers.openlibrary.org/b/isbn/${isb}-L.jpg?default=false`);
+  if(cjk){const nq=norm(q),ns=norm(simp);
+    const score=r=>{const t=norm(r.title);return (t===nq||t===ns?4:t.startsWith(nq)||t.startsWith(ns)?3:t.includes(nq)||t.includes(ns)?2:0)+(r.lang==='zh-TW'?1.5:/^zh/.test(r.lang)?.5:0)+(r.cover?.5:0)};
+    out.forEach((r,i)=>{r._s=score(r);r._i=i});out.sort((a,b)=>b._s-a._s||a._i-b._i);}
   return out;
 }
 async function coverOptions(b){
@@ -380,7 +401,7 @@ function openBook(id){
 }
 function addSheet(prefill){
   openSheet(`<div class="sh-top"><h2>Add a book</h2><button class="x" data-close aria-label="Close">×</button></div>
-  <form class="searchrow" id="sf"><input id="sq" type="search" placeholder="Title, author or ISBN" aria-label="Search for a book" value="${esc(prefill||'')}" autofocus><button class="btn pri">Search</button></form>
+  <form class="searchrow" id="sf"><input id="sq" type="search" placeholder="Title, author or ISBN — 中文也可以" aria-label="Search for a book" value="${esc(prefill||'')}" autofocus><button class="btn pri">Search</button></form>
   <div class="acts" style="margin-top:10px"><button class="btn" data-scan>Scan barcode</button><button class="btn ghost" data-manual>Enter manually</button></div>
   <p class="note" id="sStatus" style="margin-top:10px">Results come from Google Books and Open Library, with covers.</p><ul class="results" id="sRes"></ul>`);
   $('#sf').onsubmit=e=>{e.preventDefault();runSearch($('#sq').value.trim())};
@@ -391,9 +412,9 @@ async function runSearch(q){
   if(!q)return $('#sq').focus();const st=$('#sStatus');st.textContent='Searching…';$('#sRes').innerHTML='';
   try{lastResults=await searchBooks(q)}catch(e){st.textContent="Couldn't reach the book databases. Check your connection, or enter the book manually.";return}
   if(!$('#sRes'))return;
-  st.textContent=lastResults.length?`${lastResults.length} results`:'No results. Try fewer words, or enter it manually.';
+  st.textContent=(lastResults.length?`${lastResults.length} results`:'No results. Try fewer words, the ISBN, or enter it manually.')+(lastSearchNote?' '+lastSearchNote:'');
   $('#sRes').innerHTML=lastResults.map((r,i)=>`<li>${r.cover?`<img class="th" src="${esc(r.cover)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">`:'<span class="th"></span>'}
-    <div style="flex:1"><b>${esc(r.title)}</b><span class="meta">${esc([r.author,r.year,r.pages?r.pages+' pages':''].filter(Boolean).join(' · '))}</span></div><button class="btn pri" data-res="${i}" style="padding:8px 14px">Add</button></li>`).join('');
+    <div style="flex:1"><b>${esc(r.title)}</b><span class="meta">${esc([r.author,r.publisher,r.year,r.pages?r.pages+' pages':'',r.lang==='zh-TW'?'繁中':r.lang==='zh-CN'?'简中':''].filter(Boolean).join(' · '))}</span></div><button class="btn pri" data-res="${i}" style="padding:8px 14px">Add</button></li>`).join('');
 }
 /* barcode scanner */
 let scanStream=null,scanReader=null,scanLoop=null;
@@ -467,7 +488,7 @@ function moreMenu(){
 
 /* ---------- events ---------- */
 function setView(v){view=v;document.querySelectorAll('[data-tab]').forEach(t=>t.setAttribute('aria-selected',t.dataset.tab===v));['Lib','Notes','Stats','Set'].forEach(k=>$('#v'+k).hidden=k!==v);
-  if(v==='Set')$('#goalIn').value=meta.goal;render();scrollTo(0,0)}
+  if(v==='Set'){$('#goalIn').value=meta.goal;$('#gkeyIn').value=meta.gkey||''}render();scrollTo(0,0)}
 document.addEventListener('click',e=>{
   const t=e.target.closest('button');if(!t)return;const d=t.dataset,b=books[openId];
   if(d.tab)return setView(d.tab);
@@ -511,6 +532,7 @@ dlg.addEventListener('dragover',e=>{if(openId){e.preventDefault();$('#sh').class
 dlg.addEventListener('dragleave',()=>$('#sh').classList.remove('drop'));
 dlg.addEventListener('drop',e=>{$('#sh').classList.remove('drop');const f=e.dataTransfer?.files?.[0];if(f&&books[openId]){e.preventDefault();setCover(books[openId],f)}});
 dlg.addEventListener('click',e=>{if(e.target===dlg)closeSheet()});
+$('#kf').addEventListener('submit',e=>{e.preventDefault();const k=$('#gkeyIn').value.trim();if(k&&!/^[\w-]{20,60}$/.test(k))return toast("That doesn't look like an API key");meta.gkey=k;persist();toast(k?'API key saved':'API key removed')});
 $('#gf').addEventListener('submit',e=>{e.preventDefault();meta.goal=Math.max(1,+$('#goalIn').value||1);persist();render();toast('Goal saved')});
 
 function download(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000)}
