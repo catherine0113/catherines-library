@@ -38,13 +38,14 @@ button{cursor:pointer}
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]) #scene::after{background:#0006}}
 @media(min-width:701px){#scene{background-image:url(bg.jpg)}}
 .app{max-width:1080px;margin:0 auto;padding:18px max(4vw,16px) 120px;position:relative;z-index:1}
-.top{display:flex;justify-content:flex-end;gap:10px}
-.rb{width:48px;height:48px;border-radius:50%;border:0;background:var(--glass2);color:var(--wine);display:grid;place-items:center;box-shadow:0 4px 16px #0002;backdrop-filter:blur(12px)}
-.rb svg{width:22px;height:22px}
-h1{margin:4px 0 18px;color:#fff;text-shadow:0 2px 10px #0006;display:inline-flex;flex-direction:column;align-items:center;font-weight:400}
+.actbar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-width:560px;margin:12px auto 0}
+.ab{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:10px 12px;border:0;border-radius:12px;background:var(--glass2);color:var(--wine);font-weight:600;font-size:15px;box-shadow:0 4px 16px #0002;backdrop-filter:blur(12px);white-space:nowrap}
+.ab svg{width:20px;height:20px;flex:none}
+.ab:hover{background:light-dark(#fff,#2e2a36)}
+h1{margin:22px 0 22px;color:#fff;text-shadow:0 2px 10px #0006;display:flex;flex-direction:column;align-items:center;text-align:center;font-weight:400}
 h1 .t1{font:600 clamp(36px,8.5vw,64px)/1 Cinzel,"Trajan Pro",Georgia,serif;letter-spacing:.04em}
 h1 .t2{font:500 clamp(12px,2.4vw,17px)/1 Montserrat,Inter,sans-serif;letter-spacing:.42em;text-transform:uppercase;margin-top:10px;padding-left:.42em}
-.search{display:flex;align-items:center;gap:10px;background:var(--glass);backdrop-filter:blur(14px);border-radius:14px;padding:0 14px;max-width:520px}
+.search{display:flex;align-items:center;gap:10px;background:var(--glass);backdrop-filter:blur(14px);border-radius:14px;padding:0 14px;max-width:560px;margin:0 auto}
 .search svg{width:20px;height:20px;flex:none;opacity:.7}
 .search input{border:0;background:none;padding:12px 0;width:100%;font-size:17px;outline:0}
 .pillh{display:flex;justify-content:space-between;align-items:center;margin:30px 0 10px}
@@ -163,22 +164,22 @@ textarea{resize:vertical;min-height:80px}
 <div id="scene" aria-hidden="true"></div>
 
 <div class="app">
-  <div class="top">
-    <button class="rb" id="layoutBtn" aria-label="Switch shelf layout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></button>
-    <button class="rb" id="moreBtn" aria-label="Sort and options"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button>
-    <button class="rb" id="addBtn" aria-label="Add a book"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
-  </div>
   <h1 aria-label="Catherine's Library"><span class="t1">CATHERINE'S</span><span class="t2">Library</span></h1>
 
   <section id="vLib">
-    <label class="search" style="margin:0;color:inherit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="q" type="search" placeholder="Title or author" aria-label="Search by title or author"></label>
+    <label class="search" style="color:inherit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="q" type="search" placeholder="Title or author" aria-label="Search by title or author"></label>
+    <div class="actbar">
+      <button class="ab" id="layoutBtn" aria-label="Switch shelf layout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg><span>Layout</span></button>
+      <button class="ab" id="moreBtn" aria-label="Sort and options"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg><span>Sort</span></button>
+      <button class="ab" id="addBtn" aria-label="Add a book"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><span>Add book</span></button>
+    </div>
     <div id="shelves"></div>
     <div class="card goal" id="goalCard"></div>
     <p class="note" id="saveNote" style="margin-top:12px;color:var(--ink);opacity:.8">Loading…</p>
   </section>
 
   <section id="vNotes" hidden>
-    <label class="search" style="margin:0;color:inherit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="nq" type="search" placeholder="Search notes and quotes" aria-label="Search notes and quotes"></label>
+    <label class="search" style="color:inherit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="nq" type="search" placeholder="Search notes and quotes" aria-label="Search notes and quotes"></label>
     <div class="card" style="margin-top:18px"><h3>Notes &amp; quotes</h3><p class="note">Everything you've written down, newest first. Open a book to add more.</p><ul class="nl" id="allNotes" style="margin-top:8px"></ul></div>
   </section>
 
@@ -338,7 +339,7 @@ function render(){
     const bs=list.filter(b=>b.status===s);
     const asCover=meta.layout==='covers'||(meta.layout==='mixed'&&s==='reading');
     return `<div class="pillh"><span class="pill">${ST[s]}</span><span class="cnt">${bs.length}</span></div>
-    <div class="row${asCover?' cov':''}">${bs.length?bs.map(asCover?b=>cover(b):spine).join(''):`<span class="empty">${q?'No matches':s==='reading'?'Tap + to add the book you’re reading':'Nothing on this shelf yet'}</span>`}</div><div class="glassplank"></div>`;
+    <div class="row${asCover?' cov':''}">${bs.length?bs.map(asCover?b=>cover(b):spine).join(''):`<span class="empty">${q?'No matches':s==='reading'?'Tap Add book to add what you’re reading':'Nothing on this shelf yet'}</span>`}</div><div class="glassplank"></div>`;
   }).join('');
   const p=pace(),y=new Date().getFullYear(),r=Math.min(1,p.done/Math.max(1,meta.goal)),C=2*Math.PI*36;
   $('#goalCard').innerHTML=`<svg class="ring" viewBox="0 0 84 84"><circle cx="42" cy="42" r="36" fill="none" stroke="var(--line)" stroke-width="8"/><circle cx="42" cy="42" r="36" fill="none" stroke="var(--wine)" stroke-width="8" stroke-linecap="round" stroke-dasharray="${C*r} ${C}" transform="rotate(-90 42 42)"/><text x="42" y="48" text-anchor="middle" font-size="20" font-weight="800" fill="currentColor">${p.done}</text></svg>
