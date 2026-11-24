@@ -12,12 +12,12 @@
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cinzel:wght@500;600&family=Montserrat:wght@500&family=Barlow+Condensed:wght@500;600&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Montserrat:wght@500&family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 /* VOICE: calm, cosy, personal — a reading app you open on a winter evening.
    IDEA: glass bookshelves floating over an evening street photo at sunset.
    PICTURE: full-bleed drawn landscape behind face-out covers (Reading) and spines (Want to read / Read).
-   COLOUR and TYPE: wine #7a1f33 accent, frosted white glass, sky blue to peach; Inter UI, Barlow Condensed spines, Playfair covers.
+   COLOUR and TYPE: wine #7a1f33 accent, frosted white glass, sky blue to peach; Cinzel everywhere below the title (Noto Serif TC for Chinese).
    LAYOUT: big title + round icon buttons, search, pill-labelled shelves, floating glass tab bar. */
 :root{color-scheme:light dark;
 --ink:light-dark(#141414,#f4f1ee);--grey:light-dark(#6e6e73,#b4b4ba);--mute:light-dark(#5b5b60,#b9b3b0);
@@ -28,7 +28,7 @@
 :root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0}
 html,body{margin:0}
-body{color:var(--ink);font:16px/1.5 Inter,system-ui,sans-serif;overflow-x:clip;min-height:100vh;background:var(--sky1)}
+body{color:var(--ink);font:16px/1.5 Cinzel,"Noto Serif TC",Georgia,serif;overflow-x:clip;min-height:100vh;background:var(--sky1)}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:3px solid var(--brass);outline-offset:2px}
@@ -39,7 +39,7 @@ button{cursor:pointer}
 @media(min-width:701px){#scene{background-image:url(bg.jpg)}}
 .app{max-width:1080px;margin:0 auto;padding:18px max(4vw,16px) 120px;position:relative;z-index:1}
 .actbar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-width:560px;margin:12px auto 0}
-.ab{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:10px 12px;border:0;border-radius:12px;background:var(--glass2);color:var(--grey);font:600 15px/1 Cinzel,Georgia,serif;letter-spacing:.04em;box-shadow:0 4px 16px #0002;backdrop-filter:blur(12px);white-space:nowrap}
+.ab{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:10px 12px;border:0;border-radius:12px;background:var(--glass2);color:var(--grey);font:600 15px/1 Cinzel,"Noto Serif TC",Georgia,serif;letter-spacing:.04em;box-shadow:0 4px 16px #0002;backdrop-filter:blur(12px);white-space:nowrap}
 .ab svg{width:20px;height:20px;flex:none}
 @media(max-width:440px){.ab{font-size:13px;letter-spacing:0;gap:5px;padding:10px 6px}.ab svg{width:17px;height:17px}}
 .ab:hover{background:light-dark(#fff,#2e2a36)}
@@ -58,8 +58,8 @@ h1 .t2{font:500 clamp(12px,2.4vw,17px)/1 Montserrat,Inter,sans-serif;letter-spac
 .cover{flex:none;scroll-snap-align:start;width:118px;height:176px;border:0;border-radius:3px 6px 6px 3px;padding:12px 10px;display:flex;flex-direction:column;justify-content:space-between;text-align:center;color:#fff;
  box-shadow:inset 5px 0 0 #0002,inset 6px 0 0 #ffffff22,0 10px 18px #0004;transition:transform .2s;position:relative;overflow:hidden}
 .cover:hover,.cover:focus-visible,.spine:hover,.spine:focus-visible{transform:translateY(-8px)}
-.cover .ct{font:800 17px/1.1 "Playfair Display",serif;overflow-wrap:anywhere;hyphens:auto;overflow:hidden;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical}
-.cover .ca{font:600 11px/1.2 Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;opacity:.85}
+.cover .ct{font:700 17px/1.15 Cinzel,"Noto Serif TC",Georgia,serif;overflow-wrap:normal;word-break:keep-all;overflow:hidden;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical}
+.cover .ca{font:600 10px/1.2 Cinzel,"Noto Serif TC",Georgia,serif;letter-spacing:.06em;text-transform:uppercase;opacity:.85}
 .cover .orn{width:34px;height:34px;margin:0 auto;opacity:.8}
 .cover.light{color:#2a211c}
 .cover>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;background:#eee}
@@ -80,8 +80,8 @@ h1 .t2{font:500 clamp(12px,2.4vw,17px)/1 Montserrat,Inter,sans-serif;letter-spac
 .cover .prog{position:absolute;left:0;right:0;bottom:0;height:5px;background:#0003}.cover .prog i{display:block;height:100%;background:#fff}
 .spine{flex:none;scroll-snap-align:start;border:0;padding:12px 0;border-radius:2px 2px 1px 1px;display:flex;flex-direction:column;align-items:center;gap:8px;
  box-shadow:inset 3px 0 0 #ffffff26,inset -3px 0 0 #0002,0 6px 10px #0003;transition:transform .2s}
-.spine span{writing-mode:vertical-rl;font:600 15px/1 "Barlow Condensed",sans-serif;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-height:100%}
-.spine small{writing-mode:vertical-rl;font:500 10px/1 Inter;letter-spacing:.08em;text-transform:uppercase;opacity:.75;white-space:nowrap;margin-top:auto}
+.spine span{writing-mode:vertical-rl;font:700 12px/1 Cinzel,"Noto Serif TC",Georgia,serif;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-height:100%}
+.spine small{writing-mode:vertical-rl;font:600 9px/1 Cinzel,"Noto Serif TC",Georgia,serif;letter-spacing:.08em;text-transform:uppercase;opacity:.75;white-space:nowrap;margin-top:auto}
 .empty{font-size:15px;color:var(--ink);background:var(--glass);padding:10px 14px;border-radius:12px;align-self:center;margin-bottom:24px}
 .card{background:var(--glass2);backdrop-filter:blur(16px);border-radius:20px;padding:20px;box-shadow:0 8px 30px #0002}
 .goal{display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-top:22px}
@@ -97,7 +97,7 @@ h1 .t2{font:500 clamp(12px,2.4vw,17px)/1 Montserrat,Inter,sans-serif;letter-spac
 .tabbar button[aria-selected=true]{background:light-dark(#0000001a,#ffffff26);color:light-dark(#3a3a3f,#e6e6ea)}
 /* views */
 .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.kpi b{display:block;font:800 clamp(26px,4vw,36px)/1.1 Inter;color:var(--wine)}
+.kpi b{display:block;font:700 clamp(26px,4vw,36px)/1.1 Cinzel,"Noto Serif TC",Georgia,serif;color:var(--wine)}
 .kpi span{font-size:14px;color:var(--mute)}
 .grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;margin-top:12px}
 .card h3{margin:0 0 4px;font-size:19px}
@@ -112,12 +112,12 @@ h1 .t2{font:500 clamp(12px,2.4vw,17px)/1 Montserrat,Inter,sans-serif;letter-spac
 .months i{width:100%;background:var(--wine);border-radius:4px 4px 0 0;min-height:2px}
 .months em{font-style:normal;font-size:10px;color:var(--ink);white-space:nowrap}
 .pile{display:flex;flex-direction:column-reverse;align-items:center;gap:2px;padding-top:10px}
-.pile i{display:block;border-radius:2px;font:600 11px "Barlow Condensed";letter-spacing:.1em;text-transform:uppercase;text-align:center;overflow:hidden;white-space:nowrap;padding:0 8px}
+.pile i{display:block;border-radius:2px;font:700 10px Cinzel,"Noto Serif TC",Georgia,serif;letter-spacing:.1em;text-transform:uppercase;text-align:center;overflow:hidden;white-space:nowrap;padding:0 8px}
 .nl{list-style:none;padding:0;margin:0}
 .nl li{padding:12px 0;border-bottom:1px solid var(--line);display:flex;gap:12px}
 .nl li:last-child{border:0}
 .pg{flex:none;width:54px;color:var(--mute);font-size:13px;text-align:right;white-space:nowrap;padding-top:2px}
-.q{font-family:"Playfair Display",serif;font-style:italic;border-left:3px solid var(--brass);padding-left:10px}
+.q{font-family:Cinzel,"Noto Serif TC",Georgia,serif;font-style:italic;border-left:3px solid var(--brass);padding-left:10px}
 .del{margin-left:auto;border:0;background:none;color:var(--mute);min-width:36px;font-size:20px}
 .src{font-size:12px;color:var(--mute);display:block;margin-top:2px}
 .btn{border:0;background:var(--line);border-radius:12px;padding:11px 18px;min-height:44px;font-weight:600}
@@ -129,7 +129,7 @@ dialog{border:0;padding:0;background:var(--glass2);backdrop-filter:blur(24px);co
 dialog::backdrop{background:#0c0a1499;backdrop-filter:blur(3px)}
 .sh{padding:22px;overflow:auto;max-height:90vh}
 .sh-top{display:flex;gap:18px;align-items:flex-start}
-.sh-top h2{margin:0;font-size:26px;line-height:1.15}
+.sh-top h2{margin:0;font-size:24px;line-height:1.15;overflow-wrap:break-word}
 .x{margin-left:auto;border:0;background:var(--line);width:44px;height:44px;border-radius:50%;font-size:22px;flex:none}
 label{display:block;font-size:14px;color:var(--mute);margin-top:12px;font-weight:500}
 label input,label select,label textarea,.inp{display:block;width:100%;margin-top:4px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:light-dark(#fff,#15131a);min-height:44px;font-size:16px;color:var(--ink)}
@@ -325,10 +325,11 @@ function pace(){const y=new Date().getFullYear(),done=finishedIn(y).length,s=new
 /* ---------- render ---------- */
 const ORN='<svg class="orn" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="20" cy="20" r="8"/><path d="M20 4v8M20 28v8M4 20h8M28 20h8M9 9l5 5M26 26l5 5M31 9l-5 5M14 26l-5 5"/></svg>';
 function coverSrc(b){if(typeof b.coverData==='string'&&/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(b.coverData))return b.coverData;return httpsOnly(b.coverUrl)}
+function coverFs(t,big){const w=Math.max(...t.split(/\s+/).map(x=>[...x].length)),cjk=hasCJK(t);let s=cjk?(t.length>12?13:16):w>=10?10:w>=8?12:t.length>22?12:15;return big?Math.round(s*.82):s}
 function cover(b,big){
   const src=coverSrc(b);
   return `<button class="cover${LIGHT.has(b.color)?' light':''}" data-open="${esc(b.id)}" style="background:${b.color}${big?';width:96px;height:144px':''}" ${big?'tabindex="-1"':''} aria-label="${esc(b.title)}">
-  <span class="ct" style="font-size:${Math.max(...b.title.split(' ').map(w=>w.length))>9?12:b.title.length>24?14:big?14:17}px">${esc(b.title)}</span>${ORN}<span class="ca">${esc(b.author||'')}</span>${src?`<img src="${esc(src)}" alt="" loading="lazy" onerror="this.remove()">`:''}</button>`;
+  <span class="ct" style="font-size:${coverFs(b.title,big)}px">${esc(b.title)}</span>${ORN}<span class="ca">${esc(b.author||'')}</span>${src?`<img src="${esc(src)}" alt="" loading="lazy" onerror="this.remove()">`:''}</button>`;
 }
 function spine(b){
   const h=([...b.id].reduce((a,c)=>a+c.charCodeAt(0),0)*7+b.title.length*3)%46;
@@ -344,7 +345,7 @@ function render(){
     <div class="row${asCover?' cov':''}">${bs.length?bs.map(asCover?b=>cover(b):spine).join(''):`<span class="empty">${q?'No matches':s==='reading'?'Tap Add book to add what you’re reading':'Nothing on this shelf yet'}</span>`}</div><div class="glassplank"></div>`;
   }).join('');
   const p=pace(),y=new Date().getFullYear(),r=Math.min(1,p.done/Math.max(1,meta.goal)),C=2*Math.PI*36;
-  $('#goalCard').innerHTML=`<svg class="ring" viewBox="0 0 84 84"><circle cx="42" cy="42" r="36" fill="none" stroke="var(--line)" stroke-width="8"/><circle cx="42" cy="42" r="36" fill="none" stroke="var(--wine)" stroke-width="8" stroke-linecap="round" stroke-dasharray="${C*r} ${C}" transform="rotate(-90 42 42)"/><text x="42" y="48" text-anchor="middle" font-size="20" font-weight="800" fill="currentColor">${p.done}</text></svg>
+  $('#goalCard').innerHTML=`<svg class="ring" viewBox="0 0 84 84"><circle cx="42" cy="42" r="36" fill="none" stroke="var(--line)" stroke-width="8"/><circle cx="42" cy="42" r="36" fill="none" stroke="var(--wine)" stroke-width="8" stroke-linecap="round" stroke-dasharray="${C*r} ${C}" transform="rotate(-90 42 42)"/><text x="42" y="48" text-anchor="middle" font-size="20" font-weight="700" font-family='Cinzel,Georgia,serif' fill="currentColor">${p.done}</text></svg>
    <div style="flex:1"><h3>${y} Reading Challenge</h3><p class="note">${p.done} of ${meta.goal} books</p>
    <span class="tag ${p.diff>=0?'good':'bad'}">${p.diff>=0?`${p.diff} ahead of schedule`:`${Math.abs(p.diff)} behind schedule`}</span><span class="tag">${streak()}-day streak</span></div>
    ${Object.keys(books).length?'':'<button class="btn pri" id="sample2">Add sample books</button>'}`;
