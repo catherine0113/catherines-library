@@ -10,17 +10,29 @@ if (!App) {
 } else if (!cfg || !cfg.apiKey) {
   App.status({ state: 'off' });
 } else {
-  start().catch(e => { console.error(e); App.status({ state: 'out', error: 'Sync could not start. Check your connection and reload.' }); });
+  const fail = e => {
+    console.error(e);
+    const who = App.remembered && App.remembered();
+    // offline or the sync code couldn't load: you're still signed in, just not connected yet
+    if (who) App.status({ state: 'in', email: who, offline: true });
+    else App.status({ state: 'out', error: 'Sync could not start. Check your connection and reload.' });
+    window.addEventListener('online', () => start().catch(fail), { once: true });
+  };
+  start().catch(fail);
 }
 
 async function start() {
-  const [{ initializeApp }, A, F] = await Promise.all([
+  const [{ initializeApp, getApps, getApp }, A, F] = await Promise.all([
     import(`https://www.gstatic.com/firebasejs/${V}/firebase-app.js`),
     import(`https://www.gstatic.com/firebasejs/${V}/firebase-auth.js`),
     import(`https://www.gstatic.com/firebasejs/${V}/firebase-firestore.js`),
   ]);
-  const app = initializeApp(cfg);
-  const auth = A.getAuth(app);
+  const app = getApps().length ? getApp() : initializeApp(cfg);
+  // keep the sign-in saved on this device (IndexedDB, with localStorage as a backup) until you sign out
+  let auth;
+  try { auth = A.initializeAuth(app, { persistence: [A.indexedDBLocalPersistence, A.browserLocalPersistence], popupRedirectResolver: A.browserPopupRedirectResolver }); }
+  catch (e) { auth = A.getAuth(app); }
+  try { await A.setPersistence(auth, A.indexedDBLocalPersistence); } catch (e) { try { await A.setPersistence(auth, A.browserLocalPersistence); } catch (_) {} }
   let db;
   try { db = F.initializeFirestore(app, { localCache: F.persistentLocalCache({ tabManager: F.persistentMultipleTabManager() }) }); }
   catch (e) { db = F.getFirestore(app); }

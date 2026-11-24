@@ -309,13 +309,19 @@ window.LibApp={
   ready:null,
   remoteBook(id,data){if(data)books[id]=data;else delete books[id];saveNow(true);soon()},
   remoteMeta(m){meta=Object.assign({goal:24,sort:'recent',layout:'mixed'},meta.gkey&&!m.gkey?{gkey:meta.gkey}:{},m);delete meta.type;saveNow(true);soon()},
-  status(s){syncState=s;renderSync()},
+  status(s){
+    try{if(s.state==='in'&&s.email)localStorage.setItem('lib.user',s.email);if(s.state==='out'&&!s.error)localStorage.removeItem('lib.user')}catch(e){}
+    if(s.state==='out'&&!s.error&&syncState.state==='checking'&&syncState.email)s={...s,error:'You were signed out on this device — your browser cleared its saved sign-in. Sign in again and everything syncs back.'};
+    syncState=s;renderSync()},
+  remembered:()=>{try{return localStorage.getItem('lib.user')||''}catch(e){return ''}},
   toast
 };
-let syncState={state:'off'};
+const remembered=(()=>{try{return localStorage.getItem('lib.user')||''}catch(e){return ''}})();
+let syncState=window.FIREBASE_CONFIG?{state:'checking',email:remembered}:{state:'off'};
 function renderSync(){
   const s=syncState,box=$('#syncBox');if(!box)return;
   const note=$('#saveNote');
+  if(s.state==='checking'){box.innerHTML=`<p class="note">${s.email?`Signing you back in as <b>${esc(s.email)}</b>…`:'Checking sign-in…'}</p>`;if(note)note.textContent=s.email?'Reconnecting to sync…':'Loading…';return}
   if(s.state==='off'){box.innerHTML='<p class="note">Sync isn\u2019t set up yet. Until it is, your books are saved on this device only.</p>';return}
   if(s.state==='in'){
     box.innerHTML=`<p style="margin:6px 0 0">Signed in as <b>${esc(s.email||'your account')}</b></p><p class="note">${s.offline?'Offline \u2014 changes will sync when you\u2019re back online.':'Your library syncs automatically on every device you sign in on.'}</p><div class="acts"><button class="btn" id="syncOut">Sign out</button></div>`;
