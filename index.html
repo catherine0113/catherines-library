@@ -75,6 +75,11 @@ h1 .t2{font:500 clamp(12px,2.4vw,17px)/1 Montserrat,Inter,sans-serif;letter-spac
 .row.cov .cover{padding-left:24px;padding-right:6px}
 .row.cov .cover:first-child{padding-left:10px;padding-right:10px}
 .row.cov{gap:0;padding-right:40px}
+.row [data-open]{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-user-drag:none;cursor:grab}
+.row [data-open].dragging{opacity:.28}
+.dragghost{position:fixed!important;z-index:70!important;pointer-events:none;margin:0!important;transform:rotate(-4deg) scale(1.06)!important;transition:none!important;box-shadow:0 26px 44px #0008!important;cursor:grabbing}
+.dropline{position:fixed;z-index:65;width:4px;margin-left:-2px;border-radius:3px;background:#fff;box-shadow:0 0 0 1px #3a3a3f66,0 0 14px 2px #fffc;pointer-events:none}
+.row.droptarget{background:#ffffff26;border-radius:12px;box-shadow:inset 0 0 0 2px #ffffff66}
 .glassplank{height:10px;border-radius:6px;background:linear-gradient(#ffffffd8,#ffffff70);box-shadow:0 6px 14px #0003,inset 0 1px 0 #fff;margin:0 2px}
 .cover{flex:none;scroll-snap-align:start;width:118px;height:176px;border:0;border-radius:3px 6px 6px 3px;padding:12px 10px;display:flex;flex-direction:column;justify-content:space-between;text-align:center;color:#fff;
  box-shadow:16px -8px 22px -8px #0006,10px 2px 10px -2px #0006;transition:transform .2s;position:relative;overflow:visible;margin-right:-16px}
@@ -385,7 +390,8 @@ async function coverOptions(b){
 /* ---------- derived ---------- */
 function all(){
   const L=Object.values(books);
-  const by={recent:(a,b)=>(b.updatedAt||0)-(a.updatedAt||0),title:(a,b)=>a.title.localeCompare(b.title),author:(a,b)=>(a.author||'').localeCompare(b.author||''),rating:(a,b)=>(b.rating||0)-(a.rating||0)};
+  const ord=x=>typeof x.order==='number'?x.order:1e15-(x.addedAt||0)/1e3;
+  const by={manual:(a,b)=>ord(a)-ord(b)||(b.updatedAt||0)-(a.updatedAt||0),recent:(a,b)=>(b.updatedAt||0)-(a.updatedAt||0),title:(a,b)=>a.title.localeCompare(b.title),author:(a,b)=>(a.author||'').localeCompare(b.author||''),rating:(a,b)=>(b.rating||0)-(a.rating||0)};
   return L.sort(by[meta.sort]||by.recent);
 }
 const unit=b=>b.format==='audio'?'min':'pages';
@@ -404,7 +410,7 @@ function imgAttrs(u,onfail,isbn){
   const list=[hiRes(u)];const ib=cleanIsbn(isbn||'');
   if(ib&&isIsbn(ib)&&!/openlibrary\.org/.test(u))list.push(`https://covers.openlibrary.org/b/isbn/${ib}-L.jpg?default=false`);
   if(!list.includes(u))list.push(u);
-  return `src="${esc(list[0])}"${list.length>1?` data-fb="${esc(list.slice(1).join(' '))}"`:''} data-fail="${onfail}" decoding="async" onload="cvL(this)" onerror="cvE(this)"`}
+  return `src="${esc(list[0])}"${list.length>1?` data-fb="${esc(list.slice(1).join(' '))}"`:''} data-fail="${onfail}" decoding="async" draggable="false" onload="cvL(this)" onerror="cvE(this)"`}
 const cvNext=img=>{const r=(img.dataset.fb||'').split(' ').filter(Boolean);if(!r.length)return false;img.src=r.shift();if(r.length)img.dataset.fb=r.join(' ');else delete img.dataset.fb;return true};
 window.cvL=img=>{if(img.naturalWidth&&img.naturalWidth<140&&img.dataset.fb)cvNext(img)};
 window.cvE=img=>{if(cvNext(img))return;const a=img.dataset.fail;if(a==='hide')img.style.visibility='hidden';else if(a==='parent')img.parentNode.remove();else img.remove()};
@@ -490,7 +496,7 @@ function render(){
     const bs=list.filter(b=>b.status===s);
     const asCover=meta.layout==='covers'||(meta.layout==='mixed'&&s==='reading');
     return `<div class="pillh"><button class="pill" data-shelf="${s}" aria-label="Open the ${ST[s]} shelf">${ST[s]} <span aria-hidden="true">›</span></button><span class="cnt">${bs.length}</span></div>
-    <div class="row${asCover?' cov':''}">${bs.length?bs.map((b,i)=>asCover?cover(b,false,bs.length-i):spine(b)).join(''):`<span class="empty">${q?'No matches':s==='reading'?'Tap Add book to add what you’re reading':'Nothing on this shelf yet'}</span>`}</div><div class="glassplank"></div>`;
+    <div class="row${asCover?' cov':''}" data-status="${s}">${bs.length?bs.map((b,i)=>asCover?cover(b,false,bs.length-i):spine(b)).join(''):`<span class="empty">${q?'No matches':s==='reading'?'Tap Add book to add what you’re reading':'Nothing on this shelf yet'}</span>`}</div><div class="glassplank"></div>`;
   }).join('');
   const p=pace(),y=new Date().getFullYear(),r=Math.min(1,p.done/Math.max(1,meta.goal)),C=2*Math.PI*36;
   $('#goalCard').innerHTML=`<svg class="ring" viewBox="0 0 84 84"><circle cx="42" cy="42" r="36" fill="none" stroke="var(--line)" stroke-width="8"/><circle cx="42" cy="42" r="36" fill="none" stroke="var(--wine)" stroke-width="8" stroke-linecap="round" stroke-dasharray="${C*r} ${C}" transform="rotate(-90 42 42)"/><text x="42" y="48" text-anchor="middle" font-size="20" font-weight="700" font-family='Cinzel,Georgia,serif' fill="currentColor">${p.done}</text></svg>
@@ -511,7 +517,7 @@ function renderShelf(){
   const rows=[];let cur=[],used=asCover?16:0;
   items.forEach(it=>{if(cur.length&&used+it.w>W){rows.push(cur);cur=[];used=asCover?16:0}cur.push(it);used+=it.w});if(cur.length)rows.push(cur);
   while(rows.length<3)rows.push([]);
-  box.innerHTML=rows.map((r,ri)=>`<div class="row shelfrow${asCover?' cov':''}">${r.length?r.map((it,i)=>asCover?cover(it.b,false,r.length-i):it.html).join(''):(ri===0&&!bs.length?'<span class="empty">Nothing on this shelf yet</span>':'')}</div><div class="glassplank"></div>`).join('');
+  box.innerHTML=rows.map((r,ri)=>`<div class="row shelfrow${asCover?' cov':''}" data-status="${s}">${r.length?r.map((it,i)=>asCover?cover(it.b,false,r.length-i):it.html).join(''):(ri===0&&!bs.length?'<span class="empty">Nothing on this shelf yet</span>':'')}</div><div class="glassplank"></div>`).join('');
 }
 let shelfRT=null;addEventListener('resize',()=>{if(view==='Shelf'){clearTimeout(shelfRT);shelfRT=setTimeout(renderShelf,150)}});
 function renderStats(){
@@ -620,7 +626,7 @@ function editForm(b){
   <div class="acts"><button class="btn pri" type="submit">${b.id?'Save':'Add to shelf'}</button></div></form>`);
   $('#sw').onclick=e=>{const t=e.target.closest('[data-sw]');if(!t)return;if(t.dataset.sw==='auto')mode='auto';else{mode='custom';color=t.dataset.sw}$('#sw').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===t))};
   $('#bf').onsubmit=e=>{e.preventDefault();const f=Object.fromEntries(new FormData(e.target));delete f.coverfile;const id=b.id||'b'+uid();
-    const nb=Object.assign({id,notes:[],log:[],reads:[],progress:0,addedAt:Date.now()},b,{title:f.title.trim(),author:f.author.trim(),isbn:f.isbn.trim(),format:f.format,total:+f.total||0,color,spineMode:mode,updatedAt:Date.now()});
+    const nb=Object.assign({id,notes:[],log:[],reads:[],progress:0,addedAt:Date.now(),order:-Date.now()/1e3},b,{title:f.title.trim(),author:f.author.trim(),isbn:f.isbn.trim(),format:f.format,total:+f.total||0,color,spineMode:mode,updatedAt:Date.now()});
     if(!b.id||b.status!==f.status)setStatus(nb,f.status);
     books[id]=nb;persist();render();openBook(id);toast(b.id?'Saved':'Added to your shelf');const cf=e.target.coverfile.files[0];if(cf)setCover(nb,cf);};
 }
@@ -647,7 +653,7 @@ function setStatus(b,s){
 }
 function logProgress(b,to){b.log=b.log||[];const n=to-(b.progress||0);if(n)b.log.push({date:today(),n});b.progress=to;b.updatedAt=Date.now()}
 function moreMenu(){
-  const S={recent:'Recently updated',title:'Title',author:'Author',rating:'Rating'},Lb={mixed:'Covers for Reading, spines for the rest',covers:'Covers everywhere',spines:'Spines everywhere'};
+  const S={manual:'Custom order (drag books to arrange)',recent:'Recently updated',title:'Title',author:'Author',rating:'Rating'},Lb={mixed:'Covers for Reading, spines for the rest',covers:'Covers everywhere',spines:'Spines everywhere'};
   openSheet(`<div class="sh-top"><h2>Sort &amp; view</h2><button class="x" data-close aria-label="Close">×</button></div>
   <div class="menu"><h4 style="margin:16px 0 4px">Sort by</h4>${Object.entries(S).map(([k,v])=>`<button data-sort="${k}" aria-pressed="${meta.sort===k}">${v}</button>`).join('')}
   <h4 style="margin:16px 0 4px">Shelf style</h4>${Object.entries(Lb).map(([k,v])=>`<button data-layout="${k}" aria-pressed="${meta.layout===k}">${v}</button>`).join('')}</div>`);
@@ -715,6 +721,67 @@ async function fillCovers(btn){
     try{const u=(await coverOptions(b))[0];if(u){b.coverUrl=u;n++;persist();render()}}catch(e){}}
   btn.disabled=false;btn.textContent='Find missing covers';toast(`Found ${n} of ${todo.length} covers`);
 }
+/* ---------- drag & drop: reorder books and move them between shelves ---------- */
+let drag=null,suppressUntil=0,scrollRAF=null;
+function beginDrag(x,y){
+  const d=drag,el=d.el,r=el.getBoundingClientRect();d.started=true;d.ox=x-r.left;d.oy=y-r.top;
+  const g=el.cloneNode(true);g.removeAttribute('data-open');g.classList.add('dragghost');g.style.width=r.width+'px';g.style.height=r.height+'px';g.style.left=r.left+'px';g.style.top=r.top+'px';
+  document.body.appendChild(g);d.ghost=g;el.classList.add('dragging');
+  const ln=document.createElement('div');ln.className='dropline';ln.hidden=true;document.body.appendChild(ln);d.line=ln;
+  try{navigator.vibrate&&navigator.vibrate(15)}catch(e){}
+  moveDrag(x,y);
+}
+function moveDrag(x,y){
+  const d=drag;d.lx=x;d.ly=y;d.ghost.style.left=(x-d.ox)+'px';d.ghost.style.top=(y-d.oy)+'px';
+  let best=null,bd=1e9;
+  document.querySelectorAll('.row[data-status]').forEach(row=>{if(!row.offsetParent)return;const r=row.getBoundingClientRect();const dy=y<r.top?r.top-y:y>r.bottom+30?y-r.bottom-30:0;if(dy<bd&&dy<90){bd=dy;best=row}});
+  document.querySelectorAll('.row.droptarget').forEach(r=>r!==best&&r.classList.remove('droptarget'));
+  if(!best){d.target=null;d.line.hidden=true;return}
+  best.classList.add('droptarget');
+  const items=[...best.querySelectorAll('[data-open]')].filter(i=>i!==d.el),rr=best.getBoundingClientRect();
+  let before=null;for(const it of items){const r=it.getBoundingClientRect();if(x<r.left+r.width/2){before=it;break}}
+  const last=items[items.length-1];
+  d.target={status:best.dataset.status,beforeId:before?before.dataset.open:null,afterId:!before&&last?last.dataset.open:null};
+  const ref=before||last,rf=ref?ref.getBoundingClientRect():null;
+  const lx=before?rf.left-5:last?rf.right+6:rr.left+18;
+  d.line.hidden=false;d.line.style.left=lx+'px';d.line.style.top=(rf?rf.top:rr.top+10)+'px';d.line.style.height=(rf?rf.height:Math.max(60,rr.height-20))+'px';
+  // auto-scroll near the edges
+  const edgeY=y<90?-1:y>innerHeight-120?1:0,edgeX=x<rr.left+30?-1:x>rr.right-30?1:0;
+  cancelAnimationFrame(scrollRAF);
+  if(edgeY||edgeX)scrollRAF=requestAnimationFrame(function tick(){if(!drag||!drag.started)return;if(edgeY)scrollBy(0,edgeY*10);if(edgeX)best.scrollLeft+=edgeX*10;moveDrag(drag.lx,drag.ly)});
+}
+function cleanupDrag(){const d=drag;cancelAnimationFrame(scrollRAF);if(!d)return;d.ghost&&d.ghost.remove();d.line&&d.line.remove();d.el.classList.remove('dragging');document.querySelectorAll('.row.droptarget').forEach(r=>r.classList.remove('droptarget'))}
+function endDrag(){const d=drag,t=d.target;cleanupDrag();suppressUntil=Date.now()+250;if(t)applyMove(d.id,t.status,t.beforeId,t.afterId)}
+function applyMove(id,status,beforeId,afterId){
+  const b=books[id];if(!b)return;const moved=b.status!==status;
+  const prevSort=meta.sort;
+  if(prevSort!=='manual'){const cur=all();cur.forEach((x,k)=>{if(x.order!==k){x.order=k;x.updatedAt=Date.now()}})}
+  meta.sort='manual';
+  if(moved)setStatus(b,status);
+  const list=all().filter(x=>x.status===status&&x.id!==id);
+  let i=beforeId?list.findIndex(x=>x.id===beforeId):afterId?list.findIndex(x=>x.id===afterId)+1:list.length;if(i<0)i=list.length;
+  list.splice(i,0,b);list.forEach((x,k)=>{if(x.order!==k){x.order=k;x.updatedAt=Date.now()}});
+  persist();render();
+  toast(moved?`Moved to ${ST[status]}`:prevSort!=='manual'?'Sorted by your custom order':'Order saved');
+}
+document.addEventListener('pointerdown',e=>{
+  const el=e.target.closest('.row [data-open]');if(!el||e.button>0||drag)return;
+  drag={el,id:el.dataset.open,x:e.clientX,y:e.clientY,type:e.pointerType,started:false,timer:null};
+  if(e.pointerType!=='mouse'){const d=drag;d.timer=setTimeout(()=>{if(drag===d&&!d.started)beginDrag(d.x,d.y)},420)}
+});
+addEventListener('pointermove',e=>{
+  if(!drag)return;
+  if(!drag.started){const dist=Math.hypot(e.clientX-drag.x,e.clientY-drag.y);
+    if(drag.type==='mouse'){if(dist>6)beginDrag(e.clientX,e.clientY)}else if(dist>10){clearTimeout(drag.timer);drag=null}
+    return}
+  e.preventDefault();moveDrag(e.clientX,e.clientY);
+},{passive:false});
+addEventListener('pointerup',()=>{if(!drag)return;clearTimeout(drag.timer);if(drag.started)endDrag();drag=null});
+addEventListener('pointercancel',()=>{if(!drag)return;clearTimeout(drag.timer);if(drag.started){cleanupDrag();suppressUntil=Date.now()+250}drag=null});
+document.addEventListener('touchmove',e=>{if(drag&&drag.started)e.preventDefault()},{passive:false});
+document.addEventListener('click',e=>{if(Date.now()<suppressUntil&&e.target.closest('.row [data-open]')){e.stopPropagation();e.preventDefault()}},true);
+document.addEventListener('contextmenu',e=>{if(e.target.closest('.row [data-open]'))e.preventDefault()});
+addEventListener('keydown',e=>{if(e.key==='Escape'&&drag){clearTimeout(drag.timer);if(drag.started)cleanupDrag();drag=null}});
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2200)}
 const cell=v=>{v=String(v??'');return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
 async function copyCsv(){
