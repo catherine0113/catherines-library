@@ -20,7 +20,7 @@
    COLOUR and TYPE: wine #7a1f33 accent, frosted white glass, sky blue to peach; Inter UI, Barlow Condensed spines, Playfair covers.
    LAYOUT: big title + round icon buttons, search, pill-labelled shelves, floating glass tab bar. */
 :root{color-scheme:light dark;
---ink:light-dark(#141414,#f4f1ee);--mute:light-dark(#5b5b60,#b9b3b0);
+--ink:light-dark(#141414,#f4f1ee);--grey:light-dark(#6e6e73,#b4b4ba);--mute:light-dark(#5b5b60,#b9b3b0);
 --glass:light-dark(#ffffffb8,#1c1a22b8);--glass2:light-dark(#ffffffe6,#24212bf0);--line:light-dark(#0000001a,#ffffff22);
 --wine:light-dark(#7a1f33,#e0798d);--wineS:#7a1f33;--brass:#c99a3c;
 --sky1:light-dark(#7f9bb8,#0b1326);--sky2:light-dark(#c9cfd8,#1c2742);--sky3:light-dark(#f2b98a,#3a3456);--sun:light-dark(#ffd9a0,#e8ecff);
@@ -39,8 +39,9 @@ button{cursor:pointer}
 @media(min-width:701px){#scene{background-image:url(bg.jpg)}}
 .app{max-width:1080px;margin:0 auto;padding:18px max(4vw,16px) 120px;position:relative;z-index:1}
 .actbar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-width:560px;margin:12px auto 0}
-.ab{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:10px 12px;border:0;border-radius:12px;background:var(--glass2);color:var(--wine);font-weight:600;font-size:15px;box-shadow:0 4px 16px #0002;backdrop-filter:blur(12px);white-space:nowrap}
+.ab{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:10px 12px;border:0;border-radius:12px;background:var(--glass2);color:var(--grey);font:600 15px/1 Cinzel,Georgia,serif;letter-spacing:.04em;box-shadow:0 4px 16px #0002;backdrop-filter:blur(12px);white-space:nowrap}
 .ab svg{width:20px;height:20px;flex:none}
+@media(max-width:440px){.ab{font-size:13px;letter-spacing:0;gap:5px;padding:10px 6px}.ab svg{width:17px;height:17px}}
 .ab:hover{background:light-dark(#fff,#2e2a36)}
 h1{margin:22px 0 22px;color:#fff;text-shadow:0 2px 10px #0006;display:flex;flex-direction:column;align-items:center;text-align:center;font-weight:400}
 h1 .t1{font:600 clamp(36px,8.5vw,64px)/1 Cinzel,"Trajan Pro",Georgia,serif;letter-spacing:.04em}
@@ -92,7 +93,8 @@ h1 .t2{font:500 clamp(12px,2.4vw,17px)/1 Montserrat,Inter,sans-serif;letter-spac
 .tabbar{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);display:flex;gap:4px;background:var(--glass);backdrop-filter:blur(18px);border-radius:999px;padding:6px;box-shadow:0 8px 30px #0003;z-index:5}
 .tabbar button{border:0;background:none;width:64px;height:52px;border-radius:999px;display:grid;place-items:center;color:var(--ink)}
 .tabbar button svg{width:24px;height:24px}
-.tabbar button[aria-selected=true]{background:color-mix(in srgb,var(--wineS) 18%,transparent);color:var(--wine)}
+.tabbar button{color:var(--grey)}
+.tabbar button[aria-selected=true]{background:light-dark(#0000001a,#ffffff26);color:light-dark(#3a3a3f,#e6e6ea)}
 /* views */
 .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 .kpi b{display:block;font:800 clamp(26px,4vw,36px)/1.1 Inter;color:var(--wine)}
