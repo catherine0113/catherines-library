@@ -461,11 +461,13 @@ function spine(b){
   const H=170+h,auFull=(b.author||'').split(/\s+/).pop()||'';
   // one column only: short title (≤10 Chinese characters or ≤10 English words), author underneath if it fits
   let t=(b.title.split(/\s*[：:｜|—–（(]\s*/)[0]||b.title).trim();
-  if(hasCJK(t))t=[...t].slice(0,10).join('').replace(/[，、。,.\s]+$/,'');else t=t.split(/\s+/).slice(0,10).join(' ');
-  const room=H-24;let fs=12,need=textLen(t,fs,700,.06);
+  if(hasCJK(t))t=[...t].slice(0,10).join('');else t=t.split(/\s+/).slice(0,10).join(' ');
+  const trimP=s=>s.replace(/[\p{P}\p{S}\s]+$/u,'')||s;t=trimP(t);
+  const L0=spineLook(b),band=L0.style==='bands'&&/^#[0-9a-f]{6}$/i.test(L0.acc||''),pad=band?22:12;
+  const room=H-pad*2;let fs=12,need=textLen(t,fs,700,.06);
   if(need>room){fs=Math.max(9,Math.floor(12*room/need*10)/10);need=textLen(t,fs,700,.06)}
   if(!hasCJK(t)){const ws=t.split(' ');while(ws.length>1&&/^(the|and|of|a|an|to|in|on|for|&)$/i.test(ws[ws.length-1]))ws.pop();t=ws.join(' ')}
-  while(need>room){const cj=hasCJK(t),parts=cj?[...t]:t.split(' ');if(parts.length<2)break;parts.pop();t=(cj?parts.join(''):parts.join(' ')).replace(/[\s,:;'’-]+$/,'');need=textLen(t,fs,700,.06)}
+  while(need>room){const cj=hasCJK(t),parts=cj?[...t]:t.split(' ');if(parts.length<2)break;parts.pop();t=trimP(cj?parts.join(''):parts.join(' '));need=textLen(t,fs,700,.06)}
   if(!hasCJK(t)){const ws=t.split(' ');while(ws.length>1&&/^(the|and|of|a|an|to|in|on|for|&)$/i.test(ws[ws.length-1]))ws.pop();t=ws.join(' ');need=textLen(t,fs,700,.06)}
   const auLen=auFull?textLen(auFull,9,600,.08):0,au=auFull&&need+8+auLen<=room?auFull:'';
   const auH=au?auLen+10:0,avail=room-(au?auLen+8:0);
@@ -474,7 +476,7 @@ function spine(b){
   let bgCss=bg,auCol='';
   if(L.style==='bands'&&acc){const ln=y=>`linear-gradient(${acc},${acc}) 0 ${y}/100% 1.5px no-repeat`;bgCss=[ln('9px'),ln('14px'),ln('calc(100% - 10px)'),ln('calc(100% - 15px)'),bg].join(',')}
   else if(L.style==='block'&&acc){const bh=Math.round(auH+18);bgCss=`linear-gradient(${acc},${acc}) 0 100%/100% ${bh}px no-repeat,${bg}`;if(ok(L.accFg))auCol=`style="color:${L.accFg};opacity:.9"`}
-  return `<button class="spine" data-open="${esc(b.id)}" style="background:${bgCss};color:${fg};height:${H}px;width:${w}px" title="${esc(b.title)}"><span style="font-size:${fs}px;max-height:${Math.floor(avail)}px">${esc(t)}</span>${au?`<small ${auCol}>${esc(au)}</small>`:''}</button>`;
+  return `<button class="spine" data-open="${esc(b.id)}" style="background:${bgCss};color:${fg};height:${H}px;width:${w}px;padding:${pad}px 0" title="${esc(b.title)}"><span style="font-size:${fs}px;max-height:${Math.floor(avail)}px">${esc(t)}</span>${au?`<small ${auCol}>${esc(au)}</small>`:''}</button>`;
 }
 function render(){
   const list=all().filter(b=>!q||(b.title+' '+(b.author||'')).toLowerCase().includes(q));
