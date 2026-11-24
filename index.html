@@ -326,7 +326,7 @@ function coverSrc(b){if(typeof b.coverData==='string'&&/^data:image\/(jpeg|png|w
 function cover(b,big){
   const src=coverSrc(b);
   return `<button class="cover${LIGHT.has(b.color)?' light':''}" data-open="${esc(b.id)}" style="background:${b.color}${big?';width:96px;height:144px':''}" ${big?'tabindex="-1"':''} aria-label="${esc(b.title)}">
-  <span class="ct" style="font-size:${Math.max(...b.title.split(' ').map(w=>w.length))>9?12:b.title.length>24?14:big?14:17}px">${esc(b.title)}</span>${ORN}<span class="ca">${esc(b.author||'')}</span>${src?`<img src="${esc(src)}" alt="" loading="lazy" onerror="this.remove()">`:''}${b.status==='reading'&&!big?`<span class="prog"><i style="width:${pct(b)}%"></i></span>`:''}</button>`;
+  <span class="ct" style="font-size:${Math.max(...b.title.split(' ').map(w=>w.length))>9?12:b.title.length>24?14:big?14:17}px">${esc(b.title)}</span>${ORN}<span class="ca">${esc(b.author||'')}</span>${src?`<img src="${esc(src)}" alt="" loading="lazy" onerror="this.remove()">`:''}</button>`;
 }
 function spine(b){
   const h=([...b.id].reduce((a,c)=>a+c.charCodeAt(0),0)*7+b.title.length*3)%46;
@@ -387,15 +387,13 @@ function openBook(id){
     ${coverSrc(b)?'<button class="btn ghost" data-rmcover>Remove cover</button>':''}</div>
   <p class="note" style="margin-top:6px">Tip: copy a cover image and paste it here, or drop an image file onto this sheet.</p>
   <div class="seg">${Object.entries(ST).map(([k,v])=>`<button data-status="${k}" aria-pressed="${b.status===k}">${v}</button>`).join('')}</div>
-  ${b.status==='reading'?`<div class="sec"><h4>Progress</h4><div class="bar"><i style="width:${pct(b)}%"></i></div><p class="note">${b.progress||0} of ${b.total||'?'} ${unit(b)} · ${pct(b)}%</p>
-    <div class="acts" style="margin-top:8px"><label style="margin:0;flex:1">${b.format==='audio'?'Minutes listened':'Current page'}<input type="number" min="0" max="${b.total||''}" id="fProg" value="${b.progress||0}"></label><button class="btn pri" data-saveprog style="align-self:flex-end">Update</button></div></div>`:''}
   ${b.status==='done'?`<div class="sec"><h4>Rating &amp; review</h4>${starsHTML(b.rating||0)} <span class="note" style="display:inline">${b.rating?b.rating+' stars':'Tap to rate — half stars work'}</span>
     <label>Finished on<input type="date" id="fFin" value="${esc(b.finishedAt||today())}"></label>
     <label>Review<textarea id="fRev" placeholder="What stayed with you?">${esc(b.review||'')}</textarea></label>
     <div class="acts"><button class="btn pri" data-saverev>Save review</button><button class="btn" data-reread>Read again</button></div>
     ${reads.length>1?`<ul class="log">${reads.map((r,i)=>`<li>Read #${i+1}: ${esc(fmtDate(r.end))}${r.rating?` · ${r.rating}★`:''}</li>`).join('')}</ul>`:''}</div>`:''}
   <div class="sec"><h4>Notes &amp; quotes</h4>
-    <div class="acts" style="margin-top:0"><label style="margin:0;width:110px">Page<input type="number" min="0" id="nPage" value="${b.status==='reading'?(b.progress||''):''}"></label>
+    <div class="acts" style="margin-top:0"><label style="margin:0;width:110px">Page<input type="number" min="0" id="nPage" value=""></label>
     <label style="margin:0;flex:1">Type<select id="nKind"><option value="note">My note</option><option value="quote">Quote from the book</option></select></label></div>
     <label>Text<textarea id="nText" placeholder="Write a thought, or copy a line worth keeping"></textarea></label>
     <div class="acts"><button class="btn pri" data-addnote>Add</button></div>

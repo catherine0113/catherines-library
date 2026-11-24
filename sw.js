@@ -1,5 +1,5 @@
 // Offline support: app files are cached; the page itself is fetched fresh when online.
-const C='library-v5';
+const C='library-v6';
 const SHELL=['./','index.html','manifest.webmanifest','icon.svg','icon-192.png','zxing.min.js','bg.jpg','bg-small.jpg'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(SHELL)));self.skipWaiting()});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))));self.clients.claim()});
