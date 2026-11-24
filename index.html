@@ -65,10 +65,10 @@ h1 .t2{font:500 clamp(12px,2.4vw,17px)/1 Montserrat,Inter,sans-serif;letter-spac
 .pill{background:var(--glass2);backdrop-filter:blur(12px);border-radius:999px;padding:6px 14px;font-weight:700;font-size:17px;box-shadow:0 2px 10px #0001;border:0}
 .cnt{background:var(--glass);border-radius:999px;padding:3px 12px;font-size:14px;font-weight:600;color:var(--mute)}
 .row{display:flex;align-items:flex-end;gap:3px;padding:24px 24px 0 12px;overflow-x:auto;scroll-snap-type:x proximity;min-height:120px}
-.row.cov{gap:6px}
+.row.cov{gap:0;padding-right:40px}
 .glassplank{height:10px;border-radius:6px;background:linear-gradient(#ffffffd8,#ffffff70);box-shadow:0 6px 14px #0003,inset 0 1px 0 #fff;margin:0 2px}
 .cover{flex:none;scroll-snap-align:start;width:118px;height:176px;border:0;border-radius:3px 6px 6px 3px;padding:12px 10px;display:flex;flex-direction:column;justify-content:space-between;text-align:center;color:#fff;
- box-shadow:16px -8px 22px -8px #0006,6px 2px 6px -2px #0005;transition:transform .2s;position:relative;overflow:visible;margin-right:9px}
+ box-shadow:16px -8px 22px -8px #0006,10px 2px 10px -2px #0006;transition:transform .2s;position:relative;overflow:visible;margin-right:-16px}
 .cover::before{content:"";position:absolute;inset:0;border-radius:inherit;z-index:2;pointer-events:none;
  background:linear-gradient(90deg,#0000004d 0,#ffffff38 2px,#00000026 5px,#0000 11px),linear-gradient(100deg,#ffffff1f 0,#ffffff00 40%),linear-gradient(0deg,#0000001a,#0000 25%)}
 .cover::after{content:"";position:absolute;top:3px;bottom:2px;right:-9px;width:9px;z-index:1;pointer-events:none;
@@ -383,9 +383,9 @@ function pace(){const y=new Date().getFullYear(),done=finishedIn(y).length,s=new
 const ORN='<svg class="orn" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="20" cy="20" r="8"/><path d="M20 4v8M20 28v8M4 20h8M28 20h8M9 9l5 5M26 26l5 5M31 9l-5 5M14 26l-5 5"/></svg>';
 function coverSrc(b){if(typeof b.coverData==='string'&&/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(b.coverData))return b.coverData;return httpsOnly(b.coverUrl)}
 function coverFs(t,big){const w=Math.max(...t.split(/\s+/).map(x=>[...x].length)),cjk=hasCJK(t);let s=cjk?(t.length>12?13:16):w>=10?10:w>=8?12:t.length>22?12:15;return big?Math.round(s*.82):s}
-function cover(b,big){
+function cover(b,big,z){
   const src=coverSrc(b);
-  return `<button class="cover${LIGHT.has(b.color)?' light':''}" data-open="${esc(b.id)}" style="background:${b.color}${big?';width:96px;height:144px':''}" ${big?'tabindex="-1"':''} aria-label="${esc(b.title)}">
+  return `<button class="cover${LIGHT.has(b.color)?' light':''}" data-open="${esc(b.id)}" style="background:${b.color}${big?';width:96px;height:144px':''}${z?';z-index:'+z:''}" ${big?'tabindex="-1"':''} aria-label="${esc(b.title)}">
   <span class="ct" style="font-size:${coverFs(b.title,big)}px">${esc(b.title)}</span>${ORN}<span class="ca">${esc(b.author||'')}</span>${src?`<img src="${esc(src)}" alt="" loading="lazy" onerror="this.remove()">`:''}</button>`;
 }
 function spine(b){
@@ -399,7 +399,7 @@ function render(){
     const bs=list.filter(b=>b.status===s);
     const asCover=meta.layout==='covers'||(meta.layout==='mixed'&&s==='reading');
     return `<div class="pillh"><span class="pill">${ST[s]}</span><span class="cnt">${bs.length}</span></div>
-    <div class="row${asCover?' cov':''}">${bs.length?bs.map(asCover?b=>cover(b):spine).join(''):`<span class="empty">${q?'No matches':s==='reading'?'Tap Add book to add what you’re reading':'Nothing on this shelf yet'}</span>`}</div><div class="glassplank"></div>`;
+    <div class="row${asCover?' cov':''}">${bs.length?bs.map((b,i)=>asCover?cover(b,false,bs.length-i):spine(b)).join(''):`<span class="empty">${q?'No matches':s==='reading'?'Tap Add book to add what you’re reading':'Nothing on this shelf yet'}</span>`}</div><div class="glassplank"></div>`;
   }).join('');
   const p=pace(),y=new Date().getFullYear(),r=Math.min(1,p.done/Math.max(1,meta.goal)),C=2*Math.PI*36;
   $('#goalCard').innerHTML=`<svg class="ring" viewBox="0 0 84 84"><circle cx="42" cy="42" r="36" fill="none" stroke="var(--line)" stroke-width="8"/><circle cx="42" cy="42" r="36" fill="none" stroke="var(--wine)" stroke-width="8" stroke-linecap="round" stroke-dasharray="${C*r} ${C}" transform="rotate(-90 42 42)"/><text x="42" y="48" text-anchor="middle" font-size="20" font-weight="700" font-family='Cinzel,Georgia,serif' fill="currentColor">${p.done}</text></svg>
