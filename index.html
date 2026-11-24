@@ -16,10 +16,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Montserrat:wght@500&family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 /* VOICE: calm, cosy, personal — a reading app you open on a winter evening.
-   IDEA: glass bookshelves floating over an evening street photo at sunset.
+   IDEA: a real walnut bookcase with brass shelf plates, in a wood-panelled library.
    PICTURE: full-bleed drawn landscape behind face-out covers (Reading) and spines (Want to read / Read).
    COLOUR and TYPE: dark grey #3a3a3f accent, frosted white glass, sky blue to peach; Cinzel everywhere below the title (Noto Serif TC for Chinese).
-   LAYOUT: big title + round icon buttons, search, pill-labelled shelves, floating glass tab bar. */
+   LAYOUT: splash, centred title, search + action buttons, bookcase, floating glass tab bar. */
 :root{color-scheme:light dark;
 --ink:light-dark(#141414,#f4f1ee);--grey:light-dark(#6e6e73,#b4b4ba);--mute:light-dark(#5b5b60,#b9b3b0);
 --glass:light-dark(#ffffffb8,#1c1a22b8);--glass2:light-dark(#ffffffe6,#24212bf0);--line:light-dark(#0000001a,#ffffff22);
@@ -33,11 +33,11 @@ body{color:var(--ink);font:16px/1.5 Cinzel,"Noto Serif TC",Georgia,serif;overflo
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:3px solid var(--brass);outline-offset:2px}
-#scene{position:fixed;inset:0;z-index:-1;background:#6d8aa6 url(bg-small.jpg) center 35%/cover no-repeat}
+#scene{position:fixed;inset:0;z-index:-1;background:#2a1a10 url(bg-library-small.jpg) center 30%/cover no-repeat}
 #scene::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0000004d 0%,#00000038 40%,#00000059 100%)}
 :root[data-theme=dark] #scene::after{background:#00000080}
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]) #scene::after{background:#00000080}}
-@media(min-width:701px){#scene{background-image:url(bg.jpg)}}
+@media(min-width:701px){#scene{background-image:url(bg-library.jpg)}}
 .app{max-width:1080px;margin:0 auto;padding:18px max(4vw,16px) 120px;position:relative;z-index:1}
 .actbar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-width:560px;margin:12px auto 0}
 .ab{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:10px 12px;border:0;border-radius:12px;background:var(--glass2);color:var(--grey);font:600 15px/1 Cinzel,"Noto Serif TC",Georgia,serif;letter-spacing:.04em;box-shadow:0 4px 16px #0002;backdrop-filter:blur(12px);white-space:nowrap}
@@ -61,9 +61,15 @@ h1 .t2{font:500 clamp(12px,2.4vw,17px)/1 Montserrat,Inter,sans-serif;letter-spac
 .pillh{display:flex;justify-content:space-between;align-items:center;margin:30px 0 10px}
 .pill{background:var(--glass2);backdrop-filter:blur(12px);border-radius:999px;padding:6px 14px;font-weight:700;font-size:17px;box-shadow:0 2px 10px #0001;border:0}
 .cnt{background:var(--glass);border-radius:999px;padding:3px 12px;font-size:14px;font-weight:600;color:var(--mute)}
-.row{display:flex;align-items:flex-end;gap:4px;padding:10px 10px 0;overflow-x:auto;scroll-snap-type:x proximity;min-height:120px}
+.bookcase{margin:26px auto 0;padding:0 12px 12px;border-radius:4px;background:linear-gradient(90deg,#2e1a0d,#5a3920 3%,#4a2d18 8%,#4a2d18 92%,#5a3920 97%,#2e1a0d);box-shadow:0 24px 60px #000c,inset 0 0 0 1px #00000080}
+.crown{height:16px;margin:0 -12px 10px;border-radius:4px 4px 0 0;background:linear-gradient(#7a5330,#5a3920 45%,#3a2312);box-shadow:0 3px 6px #0009}
+.comp{background:radial-gradient(ellipse at 50% 0%,#3a2414 0%,#1f120a 70%),#1f120a;box-shadow:inset 0 14px 22px #000d,inset 8px 0 14px #0009,inset -8px 0 14px #0009}
+.row{display:flex;align-items:flex-end;gap:2px;padding:18px 12px 0;overflow-x:auto;scroll-snap-type:x proximity;min-height:150px}
 .row.cov{gap:16px}
-.glassplank{height:10px;border-radius:6px;background:linear-gradient(#ffffffd8,#ffffff70);box-shadow:0 6px 14px #0003,inset 0 1px 0 #fff;margin:0 2px}
+.plank{position:relative;height:26px;margin:0 -4px 12px;background:linear-gradient(#a06b3c,#7d5129 30%,#5e3b1d 75%,#4a2d16);box-shadow:inset 0 1px 0 #c99a6a,0 4px 0 #2a170b,0 10px 16px #000a;display:flex;align-items:center;justify-content:center}
+#shelves>.plank:last-child{margin-bottom:0}
+.plate{display:inline-flex;align-items:center;gap:8px;padding:3px 12px;border-radius:2px;background:linear-gradient(#f1d896,#c79a47 55%,#a87a2e);color:#2a1a0c;font:700 12px/1.2 Cinzel,"Noto Serif TC",Georgia,serif;letter-spacing:.06em;text-transform:uppercase;box-shadow:inset 0 1px 0 #fff9,inset 0 -1px 0 #0004,0 1px 3px #000a;white-space:nowrap}
+.plate b{font-weight:700;opacity:.75}
 .cover{flex:none;scroll-snap-align:start;width:118px;height:176px;border:0;border-radius:3px 6px 6px 3px;padding:12px 10px;display:flex;flex-direction:column;justify-content:space-between;text-align:center;color:#fff;
  box-shadow:inset 5px 0 0 #0002,inset 6px 0 0 #ffffff22,0 10px 18px #0004;transition:transform .2s;position:relative;overflow:hidden}
 .cover:hover,.cover:focus-visible,.spine:hover,.spine:focus-visible{transform:translateY(-8px)}
@@ -87,11 +93,13 @@ h1 .t2{font:500 clamp(12px,2.4vw,17px)/1 Montserrat,Inter,sans-serif;letter-spac
 .coverbox{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.coverbox .btn{font-size:14px;padding:8px 14px;text-decoration:none;color:inherit;display:inline-flex;align-items:center}
 .drop{outline:3px dashed var(--wine);outline-offset:-8px}
 .cover .prog{position:absolute;left:0;right:0;bottom:0;height:5px;background:#0003}.cover .prog i{display:block;height:100%;background:#fff}
-.spine{flex:none;scroll-snap-align:start;border:0;padding:12px 0;border-radius:2px 2px 1px 1px;display:flex;flex-direction:column;align-items:center;gap:8px;
+.spine{position:relative;flex:none;scroll-snap-align:start;border:0;padding:24px 0 22px;border-radius:2px 2px 1px 1px;display:flex;flex-direction:column;align-items:center;gap:8px;
  box-shadow:inset 3px 0 0 #ffffff26,inset -3px 0 0 #0002,0 6px 10px #0003;transition:transform .2s}
+.spine::before,.spine::after{content:"";position:absolute;left:0;right:0;height:7px;pointer-events:none;border-top:1.5px solid #e2c27a99;border-bottom:1.5px solid #e2c27a99}
+.spine::before{top:8px}.spine::after{bottom:8px}
 .spine span{writing-mode:vertical-rl;font:700 12px/1 Cinzel,"Noto Serif TC",Georgia,serif;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-height:100%}
 .spine small{writing-mode:vertical-rl;font:600 9px/1 Cinzel,"Noto Serif TC",Georgia,serif;letter-spacing:.08em;text-transform:uppercase;opacity:.75;white-space:nowrap;margin-top:auto}
-.empty{font-size:15px;color:var(--ink);background:var(--glass);padding:10px 14px;border-radius:12px;align-self:center;margin-bottom:24px}
+.empty{font-size:15px;color:#e9dcc6;opacity:.75;padding:10px 6px;align-self:center;margin-bottom:30px;font-style:italic}
 .card{background:var(--glass2);backdrop-filter:blur(16px);border-radius:20px;padding:20px;box-shadow:0 8px 30px #0002}
 .goal{display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-top:22px}
 .ring{width:84px;height:84px;flex:none}
@@ -185,9 +193,9 @@ textarea{resize:vertical;min-height:80px}
       <button class="ab" id="moreBtn" aria-label="Sort and options"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg><span>Sort</span></button>
       <button class="ab" id="addBtn" aria-label="Add a book"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><span>Add book</span></button>
     </div>
-    <div id="shelves"></div>
+    <div class="bookcase"><div class="crown"></div><div id="shelves"></div></div>
     <div class="card goal" id="goalCard"></div>
-    <p class="note" id="saveNote" style="margin-top:12px;color:var(--ink);opacity:.8">Loading…</p>
+    <p class="note" id="saveNote" style="margin-top:12px;color:#efe3cf;opacity:.85;text-align:center;text-shadow:0 1px 4px #000">Loading…</p>
   </section>
 
   <section id="vNotes" hidden>
@@ -387,8 +395,7 @@ function render(){
   $('#shelves').innerHTML=['reading','want','done'].map(s=>{
     const bs=list.filter(b=>b.status===s);
     const asCover=meta.layout==='covers'||(meta.layout==='mixed'&&s==='reading');
-    return `<div class="pillh"><span class="pill">${ST[s]}</span><span class="cnt">${bs.length}</span></div>
-    <div class="row${asCover?' cov':''}">${bs.length?bs.map(asCover?b=>cover(b):spine).join(''):`<span class="empty">${q?'No matches':s==='reading'?'Tap Add book to add what you’re reading':'Nothing on this shelf yet'}</span>`}</div><div class="glassplank"></div>`;
+    return `<div class="comp"><div class="row${asCover?' cov':''}">${bs.length?bs.map(asCover?b=>cover(b):spine).join(''):`<span class="empty">${q?'No matches':s==='reading'?'Tap Add book to add what you’re reading':'Nothing on this shelf yet'}</span>`}</div></div><div class="plank"><span class="plate">${ST[s]}<b>${bs.length}</b></span></div>`;
   }).join('');
   const p=pace(),y=new Date().getFullYear(),r=Math.min(1,p.done/Math.max(1,meta.goal)),C=2*Math.PI*36;
   $('#goalCard').innerHTML=`<svg class="ring" viewBox="0 0 84 84"><circle cx="42" cy="42" r="36" fill="none" stroke="var(--line)" stroke-width="8"/><circle cx="42" cy="42" r="36" fill="none" stroke="var(--wine)" stroke-width="8" stroke-linecap="round" stroke-dasharray="${C*r} ${C}" transform="rotate(-90 42 42)"/><text x="42" y="48" text-anchor="middle" font-size="20" font-weight="700" font-family='Cinzel,Georgia,serif' fill="currentColor">${p.done}</text></svg>
