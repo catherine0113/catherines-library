@@ -12,7 +12,7 @@
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Pinyon+Script&family=Barlow+Condensed:wght@500;600&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cinzel:wght@500;600&family=Montserrat:wght@500&family=Barlow+Condensed:wght@500;600&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
 <style>
 /* VOICE: calm, cosy, personal — a reading app you open on a winter evening.
    IDEA: glass bookshelves floating over an evening street photo at sunset.
@@ -41,7 +41,9 @@ button{cursor:pointer}
 .top{display:flex;justify-content:flex-end;gap:10px}
 .rb{width:48px;height:48px;border-radius:50%;border:0;background:var(--glass2);color:var(--wine);display:grid;place-items:center;box-shadow:0 4px 16px #0002;backdrop-filter:blur(12px)}
 .rb svg{width:22px;height:22px}
-h1{font:400 clamp(46px,10vw,76px)/1.05 "Pinyon Script",cursive;margin:6px 0 16px;color:#fff;text-shadow:0 2px 6px #0005,0 0 30px #ff9a5a66;font-weight:400}
+h1{margin:4px 0 18px;color:#fff;text-shadow:0 2px 10px #0006;display:inline-flex;flex-direction:column;align-items:center;font-weight:400}
+h1 .t1{font:600 clamp(36px,8.5vw,64px)/1 Cinzel,"Trajan Pro",Georgia,serif;letter-spacing:.04em}
+h1 .t2{font:500 clamp(12px,2.4vw,17px)/1 Montserrat,Inter,sans-serif;letter-spacing:.42em;text-transform:uppercase;margin-top:10px;padding-left:.42em}
 .search{display:flex;align-items:center;gap:10px;background:var(--glass);backdrop-filter:blur(14px);border-radius:14px;padding:0 14px;max-width:520px}
 .search svg{width:20px;height:20px;flex:none;opacity:.7}
 .search input{border:0;background:none;padding:12px 0;width:100%;font-size:17px;outline:0}
@@ -166,7 +168,7 @@ textarea{resize:vertical;min-height:80px}
     <button class="rb" id="moreBtn" aria-label="Sort and options"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button>
     <button class="rb" id="addBtn" aria-label="Add a book"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
   </div>
-  <h1>Catherine's Library</h1>
+  <h1 aria-label="Catherine's Library"><span class="t1">CATHERINE'S</span><span class="t2">Library</span></h1>
 
   <section id="vLib">
     <label class="search" style="margin:0;color:inherit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="q" type="search" placeholder="Title or author" aria-label="Search by title or author"></label>
