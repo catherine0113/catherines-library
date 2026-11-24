@@ -16,7 +16,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Montserrat:wght@500&family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 /* VOICE: calm, cosy, personal — a reading app you open on a winter evening.
-   IDEA: floating black-wood top and bottom boards with a warm LED strip, like the log niche in the stone-walled lounge photo.
+   IDEA: floating grey-white wood top and bottom boards with a warm LED strip, like the log niche in the stone-walled lounge photo.
    PICTURE: full-bleed drawn landscape behind face-out covers (Reading) and spines (Want to read / Read).
    COLOUR and TYPE: dark grey #3a3a3f accent, frosted white glass, sky blue to peach; Cinzel everywhere below the title (Noto Serif TC for Chinese).
    LAYOUT: big title + round icon buttons, search, pill-labelled shelves, floating glass tab bar. */
@@ -64,10 +64,10 @@ h1 .t2{font:500 clamp(12px,2.4vw,17px)/1 Montserrat,Inter,sans-serif;letter-spac
 .pillh{display:flex;justify-content:space-between;align-items:center;margin:30px 0 10px}
 .pill{background:var(--glass2);backdrop-filter:blur(12px);border-radius:999px;padding:6px 14px;font-weight:700;font-size:17px;box-shadow:0 2px 10px #0001;border:0}
 .cnt{background:var(--glass);border-radius:999px;padding:3px 12px;font-size:14px;font-weight:600;color:var(--mute)}
-.niche{--grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2000' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.004 0.2' numOctaves='3' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.03  0 0 0 0 0.025  0 0 0 0 0.02  0 0 0 1.9 -0.62'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23g%29'/%3E%3C/svg%3E");position:relative;margin-top:22px;padding-top:14px;
- background:linear-gradient(#0000,#0000) 0 14px/100% 100% no-repeat,var(--grain) 0 -6px/2000px 26px repeat-x,linear-gradient(#0c0a09,#050404) 0 0/100% 14px no-repeat;background-repeat:no-repeat,no-repeat,no-repeat;background-size:100% 100%,2000px 14px,100% 14px;background-position:0 14px,0 0,0 0;
- filter:drop-shadow(0 10px 14px #0006)}
-.niche .nlab{background:var(--grain) 0 -40px/2000px 160px,linear-gradient(#0e0b0a,#060505);box-shadow:inset 0 1px 0 #ffffff1f}
+.niche{--grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2000' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.004 0.2' numOctaves='3' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.56  0 0 0 0 0.54  0 0 0 0 0.51  0 0 0 1.5 -0.5'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23g%29'/%3E%3C/svg%3E");position:relative;margin-top:22px;padding-top:14px;
+ background:linear-gradient(#0000,#0000) 0 14px/100% 100% no-repeat,var(--grain) 0 -6px/2000px 26px repeat-x,linear-gradient(#f1eeea,#d6d1ca) 0 0/100% 14px no-repeat;background-repeat:no-repeat,no-repeat,no-repeat;background-size:100% 100%,2000px 14px,100% 14px;background-position:0 14px,0 0,0 0;
+ filter:drop-shadow(0 8px 12px #0004)}
+.niche .nlab{background:var(--grain) 0 -40px/2000px 160px,linear-gradient(#f3f0ec,#d9d4cd);box-shadow:inset 0 1px 0 #fff,inset 0 -1px 0 #0000001f;color:#3a3a3f}
 #shelves>.niche:first-child{margin-top:26px}
 .niche::before{content:"";position:absolute;left:4%;right:4%;top:14px;height:2px;border-radius:2px;background:linear-gradient(90deg,#ffcf8f00,#ffd59a 12%,#ffe0b0 50%,#ffd59a 88%,#ffcf8f00);box-shadow:0 0 10px 2px #ffbf7a99,0 0 26px 6px #ffb36b4d;z-index:2;pointer-events:none}
 .niche::after{content:"";position:absolute;left:0;right:0;top:14px;bottom:30px;background:radial-gradient(110% 80% at 50% 0%,#ffc58a59,#ffc58a1f 45%,#0000 75%);z-index:2;pointer-events:none}
