@@ -11,6 +11,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-180.png">
+<script src="firebase-config.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Montserrat:wght@500&family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -33,9 +34,9 @@ button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:3px solid var(--brass);outline-offset:2px}
 #scene{position:fixed;inset:0;z-index:-1;background:#6d8aa6 url(bg-small.jpg) center 35%/cover no-repeat}
-#scene::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0000 0%,#0000 55%,#0003 100%)}
-:root[data-theme=dark] #scene::after{background:#0006}
-@media(prefers-color-scheme:dark){:root:not([data-theme=light]) #scene::after{background:#0006}}
+#scene::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0000004d 0%,#00000038 40%,#00000059 100%)}
+:root[data-theme=dark] #scene::after{background:#00000080}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) #scene::after{background:#00000080}}
 @media(min-width:701px){#scene{background-image:url(bg.jpg)}}
 .app{max-width:1080px;margin:0 auto;padding:18px max(4vw,16px) 120px;position:relative;z-index:1}
 .actbar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-width:560px;margin:12px auto 0}
@@ -195,6 +196,10 @@ textarea{resize:vertical;min-height:80px}
   </section>
 
   <section id="vSet" hidden>
+    <div class="card" style="margin-bottom:12px">
+      <h3>Sync across devices</h3>
+      <div id="syncBox"></div>
+    </div>
     <div class="card">
       <h3>Reading challenge</h3>
       <form id="gf" class="acts" style="margin-top:6px"><label style="margin:0;flex:1">Books to read this year<input type="number" min="1" max="999" id="goalIn"></label><button class="btn pri" style="align-self:flex-end">Save</button></form>
@@ -253,17 +258,49 @@ function idbGet(k){return new Promise((res,rej)=>{const t=idb.transaction('kv').
 function idbPut(k,v){return new Promise((res,rej)=>{const tx=idb.transaction('kv','readwrite');tx.objectStore('kv').put(v,k);tx.oncomplete=res;tx.onerror=()=>rej(tx.error)})}
 let saveT=null;
 function persist(){clearTimeout(saveT);saveT=setTimeout(saveNow,250)}
-async function saveNow(){
+async function saveNow(noPush){
+  if(!noPush&&window.LibSync)try{window.LibSync.push()}catch(e){}
   const data=JSON.parse(JSON.stringify({books,meta}));
   try{if(idb)await idbPut('state',data)}catch(e){toast("Couldn't save — storage may be full")}
   try{const lite={books:{},meta};for(const k in books){const b={...books[k]};delete b.coverData;lite.books[k]=b}localStorage.setItem(LS,JSON.stringify(lite))}catch(e){}
 }
+let rT=null;const soon=()=>{clearTimeout(rT);rT=setTimeout(()=>{render();if(openId&&books[openId]&&!dlg.contains(document.activeElement))openBook(openId);if(openId&&!books[openId])closeSheet()},60)};
+window.LibApp={
+  state:()=>({books,meta}),
+  ready:null,
+  remoteBook(id,data){if(data)books[id]=data;else delete books[id];saveNow(true);soon()},
+  remoteMeta(m){meta=Object.assign({goal:24,sort:'recent',layout:'mixed'},meta.gkey&&!m.gkey?{gkey:meta.gkey}:{},m);delete meta.type;saveNow(true);soon()},
+  status(s){syncState=s;renderSync()},
+  toast
+};
+let syncState={state:'off'};
+function renderSync(){
+  const s=syncState,box=$('#syncBox');if(!box)return;
+  const note=$('#saveNote');
+  if(s.state==='off'){box.innerHTML='<p class="note">Sync isn\u2019t set up yet. Until it is, your books are saved on this device only.</p>';return}
+  if(s.state==='in'){
+    box.innerHTML=`<p style="margin:6px 0 0">Signed in as <b>${esc(s.email||'your account')}</b></p><p class="note">${s.offline?'Offline \u2014 changes will sync when you\u2019re back online.':'Your library syncs automatically on every device you sign in on.'}</p><div class="acts"><button class="btn" id="syncOut">Sign out</button></div>`;
+    if(note)note.textContent=s.offline?'Offline \u2014 will sync later.':'Synced across your devices.';return}
+  if(note)note.textContent='Saved on this device. Sign in under Settings to sync across devices.';
+  box.innerHTML=`<p class="note">Sign in on each device with the same account and your books, notes and covers stay in sync.</p>
+   <div class="acts"><button class="btn pri" id="syncG">Sign in with Google</button></div>
+   <form id="syncF" style="margin-top:6px"><label>Email<input type="email" id="syncE" autocomplete="email" required></label><label>Password<input type="password" id="syncP" autocomplete="current-password" minlength="6" required></label>
+   <div class="acts"><button class="btn" data-mode="in">Sign in</button><button class="btn" data-mode="up">Create account</button><button class="btn ghost" type="button" id="syncR">Forgot password</button></div></form>
+   ${s.error?`<p class="note" style="color:var(--wine);margin-top:8px">${esc(s.error)}</p>`:''}`;
+  let mode='in';
+  $('#syncF').querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode=b.dataset.mode});
+  $('#syncF').onsubmit=e=>{e.preventDefault();window.LibSync&&window.LibSync.email($('#syncE').value.trim(),$('#syncP').value,mode)};
+}
+document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t||!window.LibSync)return;
+  if(t.id==='syncG')window.LibSync.google();if(t.id==='syncOut')window.LibSync.signOut();
+  if(t.id==='syncR'){const em=$('#syncE').value.trim();if(!em)return toast('Type your email first');window.LibSync.reset(em)}});
 async function connect(){
   try{idb=await idbOpen();const d=await idbGet('state');if(d){books=d.books||{};meta=Object.assign(meta,d.meta||{})}else{const l=JSON.parse(localStorage.getItem(LS)||'null');if(l){books=l.books||{};meta=Object.assign(meta,l.meta||{})}}}
   catch(e){try{const l=JSON.parse(localStorage.getItem(LS)||'null');if(l){books=l.books||{};meta=Object.assign(meta,l.meta||{})}}catch(_){}}
   $('#saveNote').textContent='Saved on this device. Download a backup from Settings now and then.';
   try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
-  render();
+  render();renderSync();
+  window.LibApp._loaded=true;if(window.LibApp.ready)window.LibApp.ready();
 }
 
 /* ---------- online lookup: Google Books + Open Library ---------- */
@@ -587,6 +624,7 @@ function sample(){
   render();toast('Added 11 sample books — delete them any time');
 }
 connect();
+{const s=document.createElement('script');s.type='module';s.src='sync.js';document.body.appendChild(s)}
 if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
 }
 </script>
