@@ -1,5 +1,5 @@
 // Offline support: app files are cached; the page itself is fetched fresh when online.
-const C='library-v18';
+const C='library-v19';
 const SHELL=['./','index.html','manifest.webmanifest','icon.svg','icon-192.png','zxing.min.js','bg.jpg','bg-small.jpg','bg-lounge.jpg','bg-lounge-small.jpg','sync.js','firebase-config.js'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(SHELL)));self.skipWaiting()});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))));self.clients.claim()});
