@@ -99,8 +99,8 @@ h1 .t2{font:500 clamp(12px,2.4vw,17px)/1 Montserrat,Inter,sans-serif;letter-spac
  box-shadow:10px -6px 16px -6px #0006,3px 2px 4px -1px #0004;transition:transform .2s;position:relative}
 .spine::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(90deg,#00000059 0,#ffffff24 18%,#ffffff0a 40%,#0000 60%,#00000040 100%)}
 .spine>*{position:relative}
-.spine span{writing-mode:vertical-rl;font:700 12px/1 Cinzel,"Noto Serif TC",Georgia,serif;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-height:100%}
-.spine small{writing-mode:vertical-rl;font:600 9px/1 Cinzel,"Noto Serif TC",Georgia,serif;letter-spacing:.08em;text-transform:uppercase;opacity:.75;white-space:nowrap;margin-top:auto}
+.spine span{writing-mode:vertical-rl;font:700 12px/1.15 Cinzel,"Noto Serif TC",Georgia,serif;letter-spacing:.06em;text-transform:uppercase;white-space:normal;overflow-wrap:anywhere;text-align:center}
+.spine small{writing-mode:vertical-rl;font:600 9px/1 Cinzel,"Noto Serif TC",Georgia,serif;letter-spacing:.08em;text-transform:uppercase;opacity:.75;white-space:nowrap;margin-top:auto;max-height:70px;overflow:hidden}
 .empty{font-size:15px;color:var(--ink);background:var(--glass);padding:10px 14px;border-radius:12px;align-self:center;margin-bottom:24px}
 .card{background:var(--glass2);backdrop-filter:blur(16px);border-radius:20px;padding:20px;box-shadow:0 8px 30px #0002}
 .goal{display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-top:22px}
@@ -320,6 +320,7 @@ async function connect(){
   try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
   if(!meta.v3d){meta.v3d=1;meta.layout='covers';persist()}
   render();renderSync();
+  try{document.fonts.ready.then(()=>render())}catch(e){}
   window.LibApp._loaded=true;if(window.LibApp.ready)window.LibApp.ready();
 }
 
@@ -393,10 +394,18 @@ function cover(b,big,z){
   return `<button class="cover${LIGHT.has(b.color)?' light':''}" data-open="${esc(b.id)}" style="background:${b.color}${big?';width:96px;height:144px':''}${z?';z-index:'+z:''}" ${big?'tabindex="-1"':''} aria-label="${esc(b.title)}">
   <span class="ct" style="font-size:${coverFs(b.title,big)}px">${esc(b.title)}</span>${ORN}<span class="ca">${esc(b.author||'')}</span>${src?`<img ${imgAttrs(src,'remove')} alt="" loading="lazy">`:''}</button>`;
 }
+const _mc=document.createElement('canvas').getContext('2d');
+function textLen(t,fs,wt,ls){t=String(t).toUpperCase();let n=0;for(const ch of t){if(/[\u2e80-\u9fff\uf900-\ufaff\uff00-\uffef]/.test(ch))n+=fs;else{_mc.font=`${wt} ${fs}px Cinzel, Georgia, serif`;n+=_mc.measureText(ch).width}n+=fs*ls}return n}
 function spine(b){
   const h=([...b.id].reduce((a,c)=>a+c.charCodeAt(0),0)*7+b.title.length*3)%46;
-  const w=Math.max(32,Math.min(54,Math.round((b.total||300)/11)));
-  return `<button class="spine" data-open="${esc(b.id)}" style="background:${b.color};color:${LIGHT.has(b.color)?'#2a211c':'#fff'};height:${170+h}px;width:${w}px" title="${esc(b.title)}"><span>${esc(b.title)}</span><small>${esc((b.author||'').split(' ').pop())}</small></button>`;
+  const H=170+h,au=(b.author||'').split(/\s+/).pop()||'';
+  // fit the whole title: shrink a little, then wrap into extra columns and widen the spine
+  const auH=au?Math.min(70,textLen(au,9,600,.08)+10):0,avail=H-24-auH;
+  let fs=12,need=textLen(b.title,fs,700,.06);
+  if(need>avail){fs=Math.max(10,Math.floor(12*avail/need));need=textLen(b.title,fs,700,.06)}
+  const cols=Math.min(4,Math.max(1,Math.ceil(need/(avail*.92))));
+  const w=Math.max(Math.max(32,Math.min(54,Math.round((b.total||300)/11))),Math.ceil(cols*fs*1.2+14));
+  return `<button class="spine" data-open="${esc(b.id)}" style="background:${b.color};color:${LIGHT.has(b.color)?'#2a211c':'#fff'};height:${H}px;width:${w}px" title="${esc(b.title)}"><span style="font-size:${fs}px;max-height:${Math.floor(avail)}px">${esc(b.title)}</span>${au?`<small>${esc(au)}</small>`:''}</button>`;
 }
 function render(){
   const list=all().filter(b=>!q||(b.title+' '+(b.author||'')).toLowerCase().includes(q));
