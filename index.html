@@ -16,7 +16,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Montserrat:wght@500&family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 /* VOICE: calm, cosy, personal — a reading app you open on a winter evening.
-   IDEA: recessed black-steel wall niches with a warm LED strip, like the log niche in the stone-walled lounge photo.
+   IDEA: glass bookshelves floating over a calm stone-walled reading corner with a warm lamp.
    PICTURE: full-bleed drawn landscape behind face-out covers (Reading) and spines (Want to read / Read).
    COLOUR and TYPE: dark grey #3a3a3f accent, frosted white glass, sky blue to peach; Cinzel everywhere below the title (Noto Serif TC for Chinese).
    LAYOUT: big title + round icon buttons, search, pill-labelled shelves, floating glass tab bar. */
@@ -64,16 +64,9 @@ h1 .t2{font:500 clamp(12px,2.4vw,17px)/1 Montserrat,Inter,sans-serif;letter-spac
 .pillh{display:flex;justify-content:space-between;align-items:center;margin:30px 0 10px}
 .pill{background:var(--glass2);backdrop-filter:blur(12px);border-radius:999px;padding:6px 14px;font-weight:700;font-size:17px;box-shadow:0 2px 10px #0001;border:0}
 .cnt{background:var(--glass);border-radius:999px;padding:3px 12px;font-size:14px;font-weight:600;color:var(--mute)}
-.niche{position:relative;margin-top:22px;border:7px solid #111;border-radius:3px;background:linear-gradient(180deg,#1b1a19 0%,#121212 55%,#0e0e0e 100%);
- box-shadow:inset 0 16px 26px #000d,inset 0 -3px 0 #050505,0 1px 0 #ffffff26,0 22px 40px -12px #000b;overflow:hidden}
-#shelves>.niche:first-child{margin-top:26px}
-.niche::before{content:"";position:absolute;left:4%;right:4%;top:0;height:2px;border-radius:2px;background:linear-gradient(90deg,#ffcf8f00,#ffd59a 12%,#ffe0b0 50%,#ffd59a 88%,#ffcf8f00);box-shadow:0 0 10px 2px #ffbf7a99,0 0 26px 6px #ffb36b4d;z-index:2;pointer-events:none}
-.niche::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 70% at 50% 0%,#ffc58a3d,#ffc58a14 45%,#0000 70%);z-index:2;pointer-events:none}
-.nlab{position:relative;z-index:3;display:flex;justify-content:space-between;align-items:baseline;padding:12px 16px 0;color:#e7d6b8;font:600 12px/1 Cinzel,"Noto Serif TC",Georgia,serif;letter-spacing:.22em;text-transform:uppercase}
-.nlab b{font-weight:600;letter-spacing:.08em;opacity:.7}
-.row{position:relative;z-index:1;display:flex;align-items:flex-end;gap:3px;padding:14px 16px 0;overflow-x:auto;scroll-snap-type:x proximity;min-height:150px;border-bottom:5px solid #070707}
+.row{display:flex;align-items:flex-end;gap:4px;padding:10px 10px 0;overflow-x:auto;scroll-snap-type:x proximity;min-height:120px}
 .row.cov{gap:16px}
-
+.glassplank{height:10px;border-radius:6px;background:linear-gradient(#ffffffd8,#ffffff70);box-shadow:0 6px 14px #0003,inset 0 1px 0 #fff;margin:0 2px}
 .cover{flex:none;scroll-snap-align:start;width:118px;height:176px;border:0;border-radius:3px 6px 6px 3px;padding:12px 10px;display:flex;flex-direction:column;justify-content:space-between;text-align:center;color:#fff;
  box-shadow:inset 5px 0 0 #0002,inset 6px 0 0 #ffffff22,0 10px 18px #0004;transition:transform .2s;position:relative;overflow:hidden}
 .cover:hover,.cover:focus-visible,.spine:hover,.spine:focus-visible{transform:translateY(-8px)}
@@ -101,7 +94,7 @@ h1 .t2{font:500 clamp(12px,2.4vw,17px)/1 Montserrat,Inter,sans-serif;letter-spac
  box-shadow:inset 3px 0 0 #ffffff26,inset -3px 0 0 #0002,0 6px 10px #0003;transition:transform .2s}
 .spine span{writing-mode:vertical-rl;font:700 12px/1 Cinzel,"Noto Serif TC",Georgia,serif;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-height:100%}
 .spine small{writing-mode:vertical-rl;font:600 9px/1 Cinzel,"Noto Serif TC",Georgia,serif;letter-spacing:.08em;text-transform:uppercase;opacity:.75;white-space:nowrap;margin-top:auto}
-.empty{font-size:14px;color:#d8c8ac;opacity:.8;padding:10px 0;align-self:center;margin-bottom:34px;font-style:italic;letter-spacing:.04em}
+.empty{font-size:15px;color:var(--ink);background:var(--glass);padding:10px 14px;border-radius:12px;align-self:center;margin-bottom:24px}
 .card{background:var(--glass2);backdrop-filter:blur(16px);border-radius:20px;padding:20px;box-shadow:0 8px 30px #0002}
 .goal{display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-top:22px}
 .ring{width:84px;height:84px;flex:none}
@@ -397,7 +390,8 @@ function render(){
   $('#shelves').innerHTML=['reading','want','done'].map(s=>{
     const bs=list.filter(b=>b.status===s);
     const asCover=meta.layout==='covers'||(meta.layout==='mixed'&&s==='reading');
-    return `<section class="niche" aria-label="${ST[s]}"><div class="nlab"><span>${ST[s]}</span><b>${bs.length}</b></div><div class="row${asCover?' cov':''}">${bs.length?bs.map(asCover?b=>cover(b):spine).join(''):`<span class="empty">${q?'No matches':s==='reading'?'Tap Add book to add what you’re reading':'Nothing on this shelf yet'}</span>`}</div></section>`;
+    return `<div class="pillh"><span class="pill">${ST[s]}</span><span class="cnt">${bs.length}</span></div>
+    <div class="row${asCover?' cov':''}">${bs.length?bs.map(asCover?b=>cover(b):spine).join(''):`<span class="empty">${q?'No matches':s==='reading'?'Tap Add book to add what you’re reading':'Nothing on this shelf yet'}</span>`}</div><div class="glassplank"></div>`;
   }).join('');
   const p=pace(),y=new Date().getFullYear(),r=Math.min(1,p.done/Math.max(1,meta.goal)),C=2*Math.PI*36;
   $('#goalCard').innerHTML=`<svg class="ring" viewBox="0 0 84 84"><circle cx="42" cy="42" r="36" fill="none" stroke="var(--line)" stroke-width="8"/><circle cx="42" cy="42" r="36" fill="none" stroke="var(--wine)" stroke-width="8" stroke-linecap="round" stroke-dasharray="${C*r} ${C}" transform="rotate(-90 42 42)"/><text x="42" y="48" text-anchor="middle" font-size="20" font-weight="700" font-family='Cinzel,Georgia,serif' fill="currentColor">${p.done}</text></svg>
