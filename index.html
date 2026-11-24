@@ -34,7 +34,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:3px solid var(--brass);outline-offset:2px}
 #scene{position:fixed;inset:0;z-index:-1;background:#5f5a55 url(bg-lounge-small.jpg) 50% 60%/cover no-repeat}
-#scene::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0000004d 0%,#00000038 40%,#00000059 100%)}
+#scene::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#ffffff9e 0%,#ffffff73 45%,#ffffff8c 100%)}
 :root[data-theme=dark] #scene::after{background:#00000080}
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]) #scene::after{background:#00000080}}
 @media(min-width:701px){#scene{background-image:url(bg-lounge.jpg)}}
@@ -44,11 +44,11 @@ button{cursor:pointer}
 .ab svg{width:20px;height:20px;flex:none}
 @media(max-width:440px){.ab{font-size:13px;letter-spacing:0;gap:5px;padding:10px 6px}.ab svg{width:17px;height:17px}}
 .ab:hover{background:light-dark(#fff,#2e2a36)}
-h1{margin:22px 0 22px;color:#fff;text-shadow:0 2px 10px #0006;display:flex;flex-direction:column;align-items:center;text-align:center;font-weight:400}
+h1{margin:22px 0 22px;color:light-dark(#2f2f33,#fff);text-shadow:light-dark(0 1px 12px #fff9,0 2px 10px #0006);display:flex;flex-direction:column;align-items:center;text-align:center;font-weight:400}
 #splash{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:#2b2b2f url(bg-small.jpg) center 35%/cover no-repeat;transition:opacity .7s ease,visibility .7s;cursor:pointer}
 @media(min-width:701px){#splash{background-image:url(bg.jpg)}}
 #splash::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#00000059,#00000040 45%,#00000080)}
-#splash h1{position:relative;margin:0 0 6vh}
+#splash h1{position:relative;margin:0 0 6vh;color:#fff;text-shadow:0 2px 10px #0006}
 #splash .t1{animation:spIn 1.6s cubic-bezier(.2,.7,.2,1) both}
 #splash .t2{animation:spIn2 1.4s cubic-bezier(.2,.7,.2,1) .55s both}
 #splash .t1{font-size:clamp(44px,12vw,104px)}#splash .t2{font-size:clamp(14px,3vw,24px);margin-top:16px}
@@ -190,7 +190,7 @@ textarea{resize:vertical;min-height:80px}
     </div>
     <div id="shelves"></div>
     <div class="card goal" id="goalCard"></div>
-    <p class="note" id="saveNote" style="margin-top:12px;color:var(--ink);opacity:.8">Loading…</p>
+    <p class="note" id="saveNote" style="margin-top:12px;color:var(--ink);opacity:.7;text-align:center">Loading…</p>
   </section>
 
   <section id="vNotes" hidden>
