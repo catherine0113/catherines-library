@@ -65,6 +65,15 @@ h1 .t2{font:500 clamp(12px,2.4vw,17px)/1 Montserrat,Inter,sans-serif;letter-spac
 .pill{background:var(--glass2);backdrop-filter:blur(12px);border-radius:999px;padding:6px 14px;font-weight:700;font-size:17px;box-shadow:0 2px 10px #0001;border:0}
 .cnt{background:var(--glass);border-radius:999px;padding:3px 12px;font-size:14px;font-weight:600;color:var(--mute)}
 .row{display:flex;align-items:flex-end;gap:3px;padding:24px 24px 0 12px;overflow-x:auto;scroll-snap-type:x proximity;min-height:120px}
+.pillh .pill{cursor:pointer;color:var(--ink);font-family:inherit}
+.pillh .pill span{opacity:.55;margin-left:2px}
+.pillh .pill:hover{background:light-dark(#fff,#2e2a36)}
+.shelfhead{display:flex;align-items:center;gap:12px;margin:4px 0 6px;flex-wrap:wrap}
+.backbtn{width:auto;flex:none;padding:10px 16px}
+.shtitle{margin:0;font:700 clamp(22px,5vw,30px)/1.1 Cinzel,"Noto Serif TC",Georgia,serif;color:#fff;text-shadow:0 2px 8px #0008;flex:1}
+.shelfrow{overflow:visible;min-height:200px;margin-top:22px}
+.row.cov .cover{padding-left:24px;padding-right:6px}
+.row.cov .cover:first-child{padding-left:10px;padding-right:10px}
 .row.cov{gap:0;padding-right:40px}
 .glassplank{height:10px;border-radius:6px;background:linear-gradient(#ffffffd8,#ffffff70);box-shadow:0 6px 14px #0003,inset 0 1px 0 #fff;margin:0 2px}
 .cover{flex:none;scroll-snap-align:start;width:118px;height:176px;border:0;border-radius:3px 6px 6px 3px;padding:12px 10px;display:flex;flex-direction:column;justify-content:space-between;text-align:center;color:#fff;
@@ -99,8 +108,8 @@ h1 .t2{font:500 clamp(12px,2.4vw,17px)/1 Montserrat,Inter,sans-serif;letter-spac
  box-shadow:10px -6px 16px -6px #0006,3px 2px 4px -1px #0004;transition:transform .2s;position:relative}
 .spine::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(90deg,#00000059 0,#ffffff24 18%,#ffffff0a 40%,#0000 60%,#00000040 100%)}
 .spine>*{position:relative}
-.spine span{writing-mode:vertical-rl;font:700 12px/1.15 Cinzel,"Noto Serif TC",Georgia,serif;letter-spacing:.06em;text-transform:uppercase;white-space:normal;overflow-wrap:anywhere;text-align:center}
-.spine small{writing-mode:vertical-rl;font:600 9px/1 Cinzel,"Noto Serif TC",Georgia,serif;letter-spacing:.08em;text-transform:uppercase;opacity:.75;white-space:nowrap;margin-top:auto;max-height:70px;overflow:hidden}
+.spine span{writing-mode:vertical-rl;font:700 12px/1.3 Cinzel,"Noto Serif TC",Georgia,serif;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow-y:hidden;overflow-x:visible;text-overflow:ellipsis}
+.spine small{writing-mode:vertical-rl;font:600 9px/1.3 Cinzel,"Noto Serif TC",Georgia,serif;letter-spacing:.08em;text-transform:uppercase;opacity:.75;white-space:nowrap;margin-top:auto}
 .empty{font-size:15px;color:var(--ink);background:var(--glass);padding:10px 14px;border-radius:12px;align-self:center;margin-bottom:24px}
 .card{background:var(--glass2);backdrop-filter:blur(16px);border-radius:20px;padding:20px;box-shadow:0 8px 30px #0002}
 .goal{display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-top:22px}
@@ -170,6 +179,7 @@ textarea{resize:vertical;min-height:80px}
 .swatches{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
 .swatches button{width:34px;height:34px;border-radius:50%;border:3px solid transparent}
 .swatches button[aria-pressed=true]{border-color:var(--ink)}
+.swatches .autosw{width:auto;border-radius:99px;padding:0 12px;background:conic-gradient(#e2725b,#e0a33a,#3f6b62,#1f3a5f,#8a5a7a,#e2725b);color:#fff;font:700 12px/1 Cinzel,Georgia,serif;text-shadow:0 1px 2px #000a}
 .log{font-size:14px;color:var(--mute);margin:6px 0 0;padding-left:18px}
 .menu button{display:block;width:100%;text-align:left;border:0;background:none;padding:12px 4px;border-bottom:1px solid var(--line);font-size:16px;min-height:44px}
 .menu button[aria-pressed=true]{color:var(--wine);font-weight:700}
@@ -200,6 +210,11 @@ textarea{resize:vertical;min-height:80px}
     <p class="note" id="saveNote" style="margin-top:12px;color:var(--ink);opacity:.7;text-align:center">Loading…</p>
   </section>
 
+  <section id="vShelf" hidden>
+    <div class="shelfhead"><button class="ab backbtn" data-tab="Lib"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg><span>Library</span></button>
+      <h2 id="shTitle" class="shtitle"></h2><span class="cnt" id="shCount"></span></div>
+    <div id="shelfRows"></div>
+  </section>
   <section id="vNotes" hidden>
     <label class="search" style="color:inherit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="nq" type="search" placeholder="Search notes and quotes" aria-label="Search notes and quotes"></label>
     <div class="card" style="margin-top:18px"><h3>Notes &amp; quotes</h3><p class="note">Everything you've written down, newest first. Open a book to add more.</p><ul class="nl" id="allNotes" style="margin-top:8px"></ul></div>
@@ -268,7 +283,7 @@ const dayKey=d=>{const x=new Date(d);return new Date(x.getTime()-x.getTimezoneOf
 const today=()=>dayKey(Date.now());
 const uid=()=>Math.random().toString(36).slice(2,10);
 const fmtDate=s=>s?new Date(s+'T00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'';
-let books={},meta={goal:24,sort:'recent',layout:'covers'},q='',nq='',view='Lib',openId=null;
+let curShelf='reading',books={},meta={goal:24,sort:'recent',layout:'covers'},q='',nq='',view='Lib',openId=null;
 
 /* ---------- storage: IndexedDB on this device, localStorage as backup ---------- */
 const LS='booktracker.v1';let idb=null;
@@ -396,23 +411,77 @@ function cover(b,big,z){
 }
 const _mc=document.createElement('canvas').getContext('2d');
 function textLen(t,fs,wt,ls){t=String(t).toUpperCase();let n=0;for(const ch of t){if(/[\u2e80-\u9fff\uf900-\ufaff\uff00-\uffef]/.test(ch))n+=fs;else{_mc.font=`${wt} ${fs}px Cinzel, Georgia, serif`;n+=_mc.measureText(ch).width}n+=fs*ls}return n}
+/* ---------- automatic spine colour + style from the cover ---------- */
+const hex=c=>'#'+c.map(v=>Math.round(Math.max(0,Math.min(255,v))).toString(16).padStart(2,'0')).join('');
+const lumi=c=>{const f=v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)};return .2126*f(c[0])+.7152*f(c[1])+.0722*f(c[2])};
+const contrast=(a,b)=>{const x=lumi(a),y=lumi(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)};
+const satur=c=>{const mx=Math.max(...c),mn=Math.min(...c);return mx?(mx-mn)/mx:0};
+const dist=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2]);
+const coverKey=b=>b.coverData?'d'+b.coverData.length+b.coverData.slice(-24):(b.coverUrl||'');
+function analyzeCover(src){return new Promise(res=>{
+  if(!src)return res(null);
+  const img=new Image();let done=false;const fin=v=>{if(!done){done=true;clearTimeout(tm);res(v)}};const tm=setTimeout(()=>fin(null),15000);
+  img.crossOrigin='anonymous';
+  img.onload=()=>{try{
+    const W=48,H=72,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(img,0,0,W,H);
+    const d=x.getImageData(0,0,W,H).data,B=new Map();let tot=0;
+    for(let y=0;y<H;y++)for(let i=0;i<W;i++){const k=(y*W+i)*4;if(d[k+3]<128)continue;
+      const w=i<8?3:(i>W-4||y<3||y>H-4)?1.5:1;tot+=w;const key=(d[k]>>4)<<8|(d[k+1]>>4)<<4|(d[k+2]>>4);
+      const e=B.get(key)||{n:0,r:0,g:0,b:0};e.n+=w;e.r+=d[k]*w;e.g+=d[k+1]*w;e.b+=d[k+2]*w;B.set(key,e)}
+    // merge near buckets into colour groups
+    const groups=[];[...B.values()].sort((a,b)=>b.n-a.n).forEach(e=>{const c=[e.r/e.n,e.g/e.n,e.b/e.n];const g=groups.find(g=>dist(g.c,c)<38);
+      if(g){g.c=g.c.map((v,j)=>(v*g.n+c[j]*e.n)/(g.n+e.n));g.n+=e.n}else groups.push({c,n:e.n})});
+    groups.sort((a,b)=>b.n-a.n);const main=groups[0];if(!main)return fin(null);
+    let acc=null,best=0;for(const g of groups.slice(1)){const share=g.n/tot;if(share<.02||dist(g.c,main.c)<90)continue;const s=share*(.4+satur(g.c))*Math.min(3,contrast(g.c,main.c));if(s>best){best=s;acc=g}}
+    const bg=main.c,dark=[28,28,32],light=[255,255,255];
+    const plainFg=contrast(bg,light)>=contrast(bg,dark)?light:dark;
+    let fg=plainFg,style='plain',accC=null;
+    if(acc){accC=acc.c;const cr=contrast(accC,bg),share=acc.n/tot;
+      if(cr>=3.2)fg=accC;
+      style=share>=.2&&cr>=1.6?'block':cr>=1.8?'bands':'plain'}
+    fin({bg:hex(bg),fg:hex(fg),acc:accC?hex(accC):null,accFg:accC?hex(contrast(accC,light)>=contrast(accC,dark)?light:dark):null,style});
+  }catch(e){fin(null)}};
+  img.onerror=()=>fin(null);
+  img.src=src.startsWith('data:')?src:'https://wsrv.nl/?url='+encodeURIComponent(src)+'&w=48&h=72&fit=cover&output=png';
+})}
+const spineBusy=new Set();let spineT=null;
+function scheduleSpines(){
+  for(const b of Object.values(books)){
+    if(spineBusy.size>=2)return;
+    if(b.spineMode==='custom'||spineBusy.has(b.id))continue;
+    const k=coverKey(b);if(!k||(b.spine&&b.spine.k===k))continue;
+    spineBusy.add(b.id);
+    analyzeCover(coverSrc(b)).then(sp=>{const cur=books[b.id];if(!cur||coverKey(cur)!==k)return;cur.spine=sp?{...sp,k}:{k,fail:1};persist();clearTimeout(spineT);spineT=setTimeout(render,150)})
+      .finally(()=>{spineBusy.delete(b.id);setTimeout(scheduleSpines,50)});
+  }
+}
+function spineLook(b){const s=b.spineMode!=='custom'&&b.spine&&!b.spine.fail?b.spine:null;return s||{bg:b.color,fg:LIGHT.has(b.color)?'#2a211c':'#ffffff',style:'plain'}}
 function spine(b){
   const h=([...b.id].reduce((a,c)=>a+c.charCodeAt(0),0)*7+b.title.length*3)%46;
-  const H=170+h,au=(b.author||'').split(/\s+/).pop()||'';
-  // fit the whole title: shrink a little, then wrap into extra columns and widen the spine
-  const auH=au?Math.min(70,textLen(au,9,600,.08)+10):0,avail=H-24-auH;
-  let fs=12,need=textLen(b.title,fs,700,.06);
-  if(need>avail){fs=Math.max(10,Math.floor(12*avail/need));need=textLen(b.title,fs,700,.06)}
-  const cols=Math.min(4,Math.max(1,Math.ceil(need/(avail*.92))));
-  const w=Math.max(Math.max(32,Math.min(54,Math.round((b.total||300)/11))),Math.ceil(cols*fs*1.2+14));
-  return `<button class="spine" data-open="${esc(b.id)}" style="background:${b.color};color:${LIGHT.has(b.color)?'#2a211c':'#fff'};height:${H}px;width:${w}px" title="${esc(b.title)}"><span style="font-size:${fs}px;max-height:${Math.floor(avail)}px">${esc(b.title)}</span>${au?`<small>${esc(au)}</small>`:''}</button>`;
+  const H=170+h,auFull=(b.author||'').split(/\s+/).pop()||'';
+  // one column only: short title (≤10 Chinese characters or ≤10 English words), author underneath if it fits
+  let t=(b.title.split(/\s*[：:｜|—–（(]\s*/)[0]||b.title).trim();
+  if(hasCJK(t))t=[...t].slice(0,10).join('').replace(/[，、。,.\s]+$/,'');else t=t.split(/\s+/).slice(0,10).join(' ');
+  const room=H-24;let fs=12,need=textLen(t,fs,700,.06);
+  if(need>room){fs=Math.max(9,Math.floor(12*room/need*10)/10);need=textLen(t,fs,700,.06)}
+  if(!hasCJK(t)){const ws=t.split(' ');while(ws.length>1&&/^(the|and|of|a|an|to|in|on|for|&)$/i.test(ws[ws.length-1]))ws.pop();t=ws.join(' ')}
+  while(need>room){const cj=hasCJK(t),parts=cj?[...t]:t.split(' ');if(parts.length<2)break;parts.pop();t=(cj?parts.join(''):parts.join(' ')).replace(/[\s,:;'’-]+$/,'');need=textLen(t,fs,700,.06)}
+  if(!hasCJK(t)){const ws=t.split(' ');while(ws.length>1&&/^(the|and|of|a|an|to|in|on|for|&)$/i.test(ws[ws.length-1]))ws.pop();t=ws.join(' ');need=textLen(t,fs,700,.06)}
+  const auLen=auFull?textLen(auFull,9,600,.08):0,au=auFull&&need+8+auLen<=room?auFull:'';
+  const auH=au?auLen+10:0,avail=room-(au?auLen+8:0);
+  const w=Math.max(Math.max(32,Math.min(54,Math.round((b.total||300)/11))),Math.ceil(fs*1.7+14));
+  const L=spineLook(b),ok=v=>/^#[0-9a-f]{6}$/i.test(v||'');const bg=ok(L.bg)?L.bg:'#3d3d45',fg=ok(L.fg)?L.fg:'#ffffff',acc=ok(L.acc)?L.acc:null;
+  let bgCss=bg,auCol='';
+  if(L.style==='bands'&&acc){const ln=y=>`linear-gradient(${acc},${acc}) 0 ${y}/100% 1.5px no-repeat`;bgCss=[ln('9px'),ln('14px'),ln('calc(100% - 10px)'),ln('calc(100% - 15px)'),bg].join(',')}
+  else if(L.style==='block'&&acc){const bh=Math.round(auH+18);bgCss=`linear-gradient(${acc},${acc}) 0 100%/100% ${bh}px no-repeat,${bg}`;if(ok(L.accFg))auCol=`style="color:${L.accFg};opacity:.9"`}
+  return `<button class="spine" data-open="${esc(b.id)}" style="background:${bgCss};color:${fg};height:${H}px;width:${w}px" title="${esc(b.title)}"><span style="font-size:${fs}px;max-height:${Math.floor(avail)}px">${esc(t)}</span>${au?`<small ${auCol}>${esc(au)}</small>`:''}</button>`;
 }
 function render(){
   const list=all().filter(b=>!q||(b.title+' '+(b.author||'')).toLowerCase().includes(q));
   $('#shelves').innerHTML=['reading','want','done'].map(s=>{
     const bs=list.filter(b=>b.status===s);
     const asCover=meta.layout==='covers'||(meta.layout==='mixed'&&s==='reading');
-    return `<div class="pillh"><span class="pill">${ST[s]}</span><span class="cnt">${bs.length}</span></div>
+    return `<div class="pillh"><button class="pill" data-shelf="${s}" aria-label="Open the ${ST[s]} shelf">${ST[s]} <span aria-hidden="true">›</span></button><span class="cnt">${bs.length}</span></div>
     <div class="row${asCover?' cov':''}">${bs.length?bs.map((b,i)=>asCover?cover(b,false,bs.length-i):spine(b)).join(''):`<span class="empty">${q?'No matches':s==='reading'?'Tap Add book to add what you’re reading':'Nothing on this shelf yet'}</span>`}</div><div class="glassplank"></div>`;
   }).join('');
   const p=pace(),y=new Date().getFullYear(),r=Math.min(1,p.done/Math.max(1,meta.goal)),C=2*Math.PI*36;
@@ -421,8 +490,22 @@ function render(){
    <span class="tag ${p.diff>=0?'good':'bad'}">${p.diff>=0?`${p.diff} ahead of schedule`:`${Math.abs(p.diff)} behind schedule`}</span><span class="tag">${streak()}-day streak</span></div>
    ${Object.keys(books).length?'':'<button class="btn pri" id="sample2">Add sample books</button>'}`;
   if(view==='Stats')renderStats();
+  if(view==='Shelf')renderShelf();
+  setTimeout(scheduleSpines,300);
   if(view==='Notes')renderNotes();
 }
+function renderShelf(){
+  const s=curShelf,bs=all().filter(b=>b.status===s);
+  $('#shTitle').textContent=ST[s];$('#shCount').textContent=bs.length+(bs.length===1?' book':' books');
+  const asCover=meta.layout==='covers'||(meta.layout==='mixed'&&s==='reading');
+  const box=$('#shelfRows'),W=Math.max(200,box.clientWidth-36);
+  const items=bs.map((b,i)=>{if(asCover){const cw=innerWidth<=600?100:118;return {w:cw-16,b}}const html=spine(b);return {w:(+(/width:(\d+)px/.exec(html)||[0,40])[1])+3,html}});
+  const rows=[];let cur=[],used=asCover?16:0;
+  items.forEach(it=>{if(cur.length&&used+it.w>W){rows.push(cur);cur=[];used=asCover?16:0}cur.push(it);used+=it.w});if(cur.length)rows.push(cur);
+  while(rows.length<3)rows.push([]);
+  box.innerHTML=rows.map((r,ri)=>`<div class="row shelfrow${asCover?' cov':''}">${r.length?r.map((it,i)=>asCover?cover(it.b,false,r.length-i):it.html).join(''):(ri===0&&!bs.length?'<span class="empty">Nothing on this shelf yet</span>':'')}</div><div class="glassplank"></div>`).join('');
+}
+let shelfRT=null;addEventListener('resize',()=>{if(view==='Shelf'){clearTimeout(shelfRT);shelfRT=setTimeout(renderShelf,150)}});
 function renderStats(){
   const L=logs(),y=new Date().getFullYear(),fin=finishedIn(y),yl=L.filter(l=>l.date.startsWith(String(y)));
   const pages=yl.filter(l=>l.book.format!=='audio').reduce((a,l)=>a+Math.max(0,l.n),0);
@@ -515,7 +598,7 @@ async function scanSheet(){
 }
 function editForm(b){
   b=b||{format:'paper',status:'want'};if(!b.color)b.color=CLOTH[Math.floor(Math.random()*CLOTH.length)];
-  let color=b.color;
+  let color=b.color,mode=b.spineMode||'auto';
   openSheet(`<div class="sh-top"><h2>${b.id?'Edit book':'Add a book'}</h2><button class="x" data-close aria-label="Close">×</button></div>
   <form id="bf"><label>Title<input name="title" required value="${esc(b.title||'')}"></label>
   <label>Author<input name="author" value="${esc(b.author||'')}"></label>
@@ -524,11 +607,12 @@ function editForm(b){
   <div class="acts" style="margin-top:0"><label style="flex:1">Shelf<select name="status">${Object.entries(ST).map(([k,v])=>`<option value="${k}" ${b.status===k?'selected':''}>${v}</option>`).join('')}</select></label>
   <label style="flex:1">ISBN (optional)<input name="isbn" value="${esc(b.isbn||'')}"></label></div>
   ${coverSrc(b)?`<div style="margin-top:12px">${cover(b,true)}</div>`:''}<label>${coverSrc(b)?'Replace cover with a photo (optional)':'Cover photo (optional)'}<input type="file" accept="image/*" name="coverfile"></label>
-  <label>Fallback colour (used for the spine)</label><div class="swatches" id="sw">${CLOTH.map(c=>`<button type="button" data-sw="${c}" style="background:${c}" aria-pressed="${c===color}" aria-label="Colour ${c}"></button>`).join('')}</div>
+  <label>Spine colour</label><div class="swatches" id="sw"><button type="button" class="autosw" data-sw="auto" aria-pressed="${mode!=='custom'}" aria-label="Match the cover automatically">Auto</button>${CLOTH.map(c=>`<button type="button" data-sw="${c}" style="background:${c}" aria-pressed="${mode==='custom'&&c===color}" aria-label="Colour ${c}"></button>`).join('')}</div>
+  <p class="note" style="margin-top:6px">Auto reads the cover and picks the spine colour, lettering and style for you.</p>
   <div class="acts"><button class="btn pri" type="submit">${b.id?'Save':'Add to shelf'}</button></div></form>`);
-  $('#sw').onclick=e=>{const t=e.target.closest('[data-sw]');if(!t)return;color=t.dataset.sw;$('#sw').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===t))};
+  $('#sw').onclick=e=>{const t=e.target.closest('[data-sw]');if(!t)return;if(t.dataset.sw==='auto')mode='auto';else{mode='custom';color=t.dataset.sw}$('#sw').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===t))};
   $('#bf').onsubmit=e=>{e.preventDefault();const f=Object.fromEntries(new FormData(e.target));delete f.coverfile;const id=b.id||'b'+uid();
-    const nb=Object.assign({id,notes:[],log:[],reads:[],progress:0,addedAt:Date.now()},b,{title:f.title.trim(),author:f.author.trim(),isbn:f.isbn.trim(),format:f.format,total:+f.total||0,color,updatedAt:Date.now()});
+    const nb=Object.assign({id,notes:[],log:[],reads:[],progress:0,addedAt:Date.now()},b,{title:f.title.trim(),author:f.author.trim(),isbn:f.isbn.trim(),format:f.format,total:+f.total||0,color,spineMode:mode,updatedAt:Date.now()});
     if(!b.id||b.status!==f.status)setStatus(nb,f.status);
     books[id]=nb;persist();render();openBook(id);toast(b.id?'Saved':'Added to your shelf');const cf=e.target.coverfile.files[0];if(cf)setCover(nb,cf);};
 }
@@ -562,11 +646,12 @@ function moreMenu(){
 }
 
 /* ---------- events ---------- */
-function setView(v){view=v;document.querySelectorAll('[data-tab]').forEach(t=>t.setAttribute('aria-selected',t.dataset.tab===v));['Lib','Notes','Stats','Set'].forEach(k=>$('#v'+k).hidden=k!==v);
+function setView(v){view=v;document.querySelectorAll('.tabbar [data-tab]').forEach(t=>t.setAttribute('aria-selected',t.dataset.tab===(v==='Shelf'?'Lib':v)));['Lib','Shelf','Notes','Stats','Set'].forEach(k=>$('#v'+k).hidden=k!==v);
   if(v==='Set'){$('#goalIn').value=meta.goal;$('#gkeyIn').value=meta.gkey||''}render();scrollTo(0,0)}
 document.addEventListener('click',e=>{
   const t=e.target.closest('button');if(!t)return;const d=t.dataset,b=books[openId];
   if(d.tab)return setView(d.tab);
+  if(d.shelf){curShelf=d.shelf;return setView('Shelf')}
   if(t.id==='addBtn'||'addsheet' in d){stopScan();return addSheet()}
   if('scan' in d)return scanSheet();
   if('manual' in d)return editForm({title:($('#sq')&&$('#sq').value.trim())||'',format:'paper',status:'want'});
